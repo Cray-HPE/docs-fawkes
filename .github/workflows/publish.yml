@@ -17,6 +17,17 @@ jobs:
     - name: Install Antora and the Antora Lunr Extension
       run: npm i antora @antora/lunr-extension
 
+    - name: Fetch antora-ui bundle
+      uses: dsaltares/fetch-gh-release-asset@master
+      with:
+        repo: 'Cray-HPE/antora-ui'
+        file: 'ui-bundle.zip'
+
+    - name: Move ui-bundle.zip
+      run: |
+        mkdir antora-ui
+        cp ui-bundle.zip antora-ui/ui-bundle.zip
+
     - name: Generate Site
       working-directory: ./docs-site
       env:
