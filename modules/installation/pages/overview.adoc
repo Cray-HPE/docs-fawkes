@@ -1,0 +1,21 @@
+= Installation
+
+This module will guide a user through the installation of the Fawkes project on bare-metal.
+
+This entails:
+
+* Booting live media via a USB or RemoteISO
+* Installing the Hypervisor OS and rebooting
+* Launching the Management VM
+* Discovering additional servers to use as hypervisors and storage nodes
+* Deploying the additional servers
+* Launching the Kubernetes virtual machines and the physical storage cluster
+
+== Crucible
+
+Crucible is a proof-of-concept application currently written in Python for facilitating
+the installation of Fawkes.
+
+It is currently limited as far as configuration goes.
+
+Crucible is being rewritten in Go, and in that rewrite there will be more versatile configuration/inputs available.

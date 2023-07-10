@@ -1,3 +1,0 @@
-= Example Component
-
-This is the starting page for the example component A.

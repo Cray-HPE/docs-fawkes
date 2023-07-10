@@ -1,0 +1,76 @@
+= ISO Installation
+:toc:
+:toclevels: 3
+
+
+== UEFI Boot
+
+WARNING: Only UEFI mode is supported. Legacy BIOS mode may work, but it is strongly recommended to use UEFI mode
+instead.
+
+. Boot the server and enter the boot menu selection screen, in the example below the boot menu selection screen is entered
+by pressing kbd:[F6]. On some servers this could be another function key.
++
+image::bios-intel.png[POST,align="center"]
+. Select the USB flash drive that was inserted.
++
+image::bios-intel-bbs.png[Select the USB,align="center"]
+. A GRUB screen should display next, either wait for the timer to run out or press kbd:[Enter] to move forward.
++
+image::livecd-grub.png[LiveCD GRUB,align="center"]
+. After booting, the login prompt should be presented
++
+[source,bash]
+----
+hypervisor login:
+----
+. Login as `root` with a blank password, the system will immediately prompt for the password to be changed/set.
++
+NOTE: This will only set the password for the LiveCD  `root` account, this does not carry over to the booted Hypervisor image.
++
+[soruce,bash]
+----
+hypervisor login: root
+Password:
+You are required to change your password immediately (administrator enforced)
+Changing password for root.
+Current password:
+New password:
+Retype new password:
+ _   ___   _______ _____       _   _
+| | | \ \ / / ___ \  __/      | | | |
+| |_| |\ V /| |_/ / |__   __  | | | |
+|  _  | \ / |  __/|  __| |__| | | | |
+| | | | | | | |   | |___      \ \/ /
+\_| |/  |/   \|   |____/       \__/
+
+
+CRAY-HPE Hypervisor OS
+----
+
+== Install to Disk
+
+Now that the LiveCD is up, we can install the OS to disk.
+
+. Setup `udev` rules
++
+[source,bash]
+----
+crucible network udev
+----
+. Wipe the server.
++
+WARNING: This will wipe all storage disks on the server with exception to USB devices.
++
+[source,bash]
+----
+crucible storage wipe
+----
+. Install the OS to disk.
++
+[source,bash]
+----
+crucible install
+----
+. Copy contents from the USB to disk
+. Reboot to disk

@@ -1,0 +1,69 @@
+= Management VM
+:toc:
+:toclevels: 3
+
+WARNING: This page is a work in progress. *This page will be automated, instead the user will be prompted before rebooting
+to disk or right after.*
+
+. Copy the management VM image from the Live CD into the appropriate location.
++
+[source,bash]
+----
+mkdir -p /vms/images
+cp /data/*.qcow2 /vms/images/
+----
+. Copy the seed `meta-data.yml` and `user-data.yml` files into position
++
+[source,code]
+----
+mkdir -p /vms/cloud-init/management-vm
+cp /srv/cray/metal-former/libvirt/meta-data.yml /vms/cloud-init/management-vm
+cp /srv/cray/metal-former/libvirt/user-data.yml /vms/cloud-init/management-vm
+----
+. Generate an SSH key
++
+[source,code]
+----
+ssh-keygen
+----
+. Use `yq` to update `user-data.yml`
++
+[source,code]
+----
+yq -i eval '(.users.[] | select(.name = "admin") | .ssh_authorized_keys) += "'"$(cat /root/.ssh/id_rsa.pub)"'"' /vms/cloud-init/management-vm/user-data.yml
+----
+. Create the cloud-init ISO
++
+[source,bash]
+----
+ln -snf user-data.yml /vms/cloud-init/management-vm/user-date
+ln -snf meta-data.yml /vms/cloud-init/management-vm/meta-data
+xorriso -as genisoimage \
+    -output /vms/cloud-init/management-vm/cloud-init.iso \
+    -volid CIDATA -joliet -rock -f \
+    /vms/cloud-init/management-vm/user-data \
+    /vms/cloud-init/management-vm/meta-data
+----
+. Resize the VM image to at least 100G
++
+[source,bash]
+----
+virsh pool-define-as management-pool dir --target /var/lib/libvirt/management-pool
+virsh pool-build management-pool
+virsh pool-start management-pool
+virsh pool-autostart management-pool
+virsh vol-create-as --pool management-pool --name management-vm.qcow2 --capacity 100G --format qcow2
+virsh vol-upload --pool management-pool management-vm.qcow2 /vms/images/management-vm-x86_64.qcow2
+----
+. Boot the VM.
++
+[source,bash]
+----
+virsh create /srv/cray/metal-former/libvirt/domain.xml
+----
+. View the VM's console
++
+[source,bash]
+----
+virsh console management-vm
+----

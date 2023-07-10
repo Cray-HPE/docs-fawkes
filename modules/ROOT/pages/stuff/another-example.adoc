@@ -1,5 +1,0 @@
-= Nested Example
-
-This is a nested example for component A.
-
-NOTE: This is a note box.

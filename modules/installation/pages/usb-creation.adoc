@@ -1,0 +1,114 @@
+= USB Creation
+:toc:
+:toclevels:
+
+== Downloading
+
+NOTE: For the time being, the artifacts are downloaded indivudually and from a private mirror.
+In the near future these will be available in a single artifact from a public mirror.
+
+=== Prerequisites
+
+* `curl`
+
+NOTE: Windows users can download link:https://curl.se/windows/[`curl` for Windows].
+
+=== Downloading
+
+. Download the latest, stable Hypervisor ISO
++
+NOTE: At this time the ISO is only available for users that have credentials to the Artifactory instance.
++
+.. Set Credentials
++
+[source,bash]
+----
+ARTIFACTORY_USER
+----
++
+[source,bash]
+----
+ARTIFACTORY_TOKEN
+----
++
+[source,bash]
+----
+ARCH=x86_64
+----
+. Download the latest, stable Hypervisor ISO
++
+[source,bash]
+----
+curl -C - -o hypervisor.iso \
+    "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/stable/hypervisor/\\[RELEASE\\]/hypervisor-\\[RELEASE\\]-${ARCH}.iso"
+----
+. Download the latest, stable Management VM
++
+[source,bash]
+----
+curl -C - -o management-vm.qcow2 \
+    "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/stable/hypervisor/\\[RELEASE\\]/management-vm-\\[RELEASE\\]-${ARCH}.iso"
+----
+. Download the latest, stable Kubernetes VM
++
+[source,bash]
+----
+curl -C - -o kubernetes-vm.qcow2 \
+    "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/stable/hypervisor/\\[RELEASE\\]/kubernetes-vm-\\[RELEASE\\]-${ARCH}.iso"
+----
+
+== Linux
+
+The Linux method will enable persistence as well as data storage for bringing artifacts into the booted LiveCD.
+
+=== Prerequisites
+
+* `blkid`
+* `dd`
+* `mktemp`
+* `sgdisk`
+* `parted`
+
+=== Creating the USB
+
+. Download the `write-livecd.sh` script
++
+[source,bash]
+----
+curl -s https://raw.githubusercontent.com/Cray-HPE/crucible/main/crucible/scripts/write-livecd.sh -O
+set +x write-livecd.sh
+----
+. Find the USB to use.
++
+NOTE: The target device does not need to be wiped.
+. Invoke the script, optionally passing a different size (in megabytes) for the copy-on-write persistent partition.
++
+[source,bash]
+----
+# usage: [DEVICE] [ISO] [SIZE OF COW]
+sudo ./write-livecd /dev/sdX ./hypervisor.iso 50000
+----
+. Mount the USB and copy over our downloaded artifacts.
++
+[source,bash]
+----
+sudo mkdir -p /mnt
+sudo mount -L data /mnt
+sudo cp ./management-vm.qcow2 ./kubernetes-vm.qcow2 /mnt/
+sudo umount /mnt
+----
+. Eject the USB and plug it into the server for deployment.
+
+== MacOS and Windows
+
+CAUTION: The MacOS and Windows method will not enable persistence on the drive.
+
+=== Prerequisites
+
+- link:https://etcher.balena.io/[belanaEtcher]
+
+NOTE: `dd` can also be used for macOS users.
+
+. Open belanaEtcher
+. Select the ISO file, the USB stick, and click Flash
+. Eject the USB and insert it into the server

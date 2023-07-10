@@ -1,11 +1,8 @@
 ---
-name: component-a
-title: Component A
-version: 1.0.0
-start_page: example.adoc
-asciidoc:
-  attributes:
-    source-language: asciidoc@
-    table-caption: false
+name: fawkes
+title: Fawkes
+version: v1.0.0
+prerelease: -alpha.1
 nav:
 - modules/ROOT/nav.adoc
+- modules/installation/nav.adoc

@@ -1,0 +1,24 @@
+= Fawkes Project
+:navtitle: Fawkes
+:toc:
+:toclevels: 3
+
+Fawkes is a bare-metal deployment and management solution for high-performance computing. It is an open-source tool
+that runs on bare-metal servers, and leverages Ansible and libvirt for the orchestration and deployment of virtual
+machines as well as additional hypervisor servers.
+
+== Fawkes Architecture
+
+The Fawkes architecture
+
+Linux OS:: SuSE's Linux Enterprise Server operating system with as minimum of a package/dependency footprint as we can muster for a small CVE footprint.
+libvirt:: An open-source virtualization API for managing virtual machines.
+Kubernetes:: An infrastructure language for scaling and managing containerized solutions that runs on the Fawkes virtual machines.
+CEPH:: A non-virtualized S3 bucket storage service
+
+== HPC Support
+
+Fawkes is designed with its friends in mind, after deploying bare-metal with Fawkes a cluster can support the deployment of:
+
+Cray System Management:: An HPC management system produced by CRAY, The original supercomputer company.
+HPCM:: (High-Performance Cluster Management) tooling produced by Hewlett-Packard Enterprise.
