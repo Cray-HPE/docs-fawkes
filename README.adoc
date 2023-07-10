@@ -1,0 +1,19 @@
+= Anotra Docs Component Template
+:toc:
+:toclevels:
+
+A template for an Antora component for an Antora site builder.
+
+link:https://docs.antora.org/antora/latest/[Antora] is a documentation generator that can build an HTML
+webpage out of one or more Git repositories that host AsciiDoc.
+
+This template is designed for a component, and should be pulled into a site by an Antora playbook.
+
+== Resources
+
+- link:https://docs.asciidoctor.org/asciidoc/latest/syntax-quick-reference[AsciiDoc Syntax Quick Reference]
+- link:https://docs.antora.org/antora/latest/install-and-run-quickstart/#create-a-playbook[Example Playbook]
+- link:https://github.com/Cray-HPE/fawkes/blob/main/.github/workflows/publish.yml[Example GitHub Pages]
+- link:https://gitlab.com/antora/demo/demo-component-a[Demo A component] (what this template is modeled after)
+- link:https://gitlab.com/antora/demo/demo-component-b[Demo B component]
+- link:https://intellij-asciidoc-plugin.ahus1.de/docs/users-guide/features/advanced/antora.html[IntelliJ Plugin for Antora]

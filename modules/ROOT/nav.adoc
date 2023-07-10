@@ -1,0 +1,3 @@
+* xref:example.adoc[]
+* stuff
+** xref:stuff/another-example.adoc[]
