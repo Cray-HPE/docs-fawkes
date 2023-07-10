@@ -24,4 +24,7 @@
 
 .PHONY: docs
 docs:
-	npx antora docs-site/antora-playbook.yml
+	npx antora antora-playbook.yml
+
+clean:
+	rm -rf build
