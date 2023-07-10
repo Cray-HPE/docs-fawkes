@@ -35,7 +35,7 @@ jobs:
       run: npx antora antora-playbook.yml
 
     - name: Upload GitHub Pages artifact
-      uses: actions/upload-pages-artifact@v1.0.9
+      uses: actions/upload-pages-artifact@v1.0.10
       with:
         path: docs-site/build/site
 
