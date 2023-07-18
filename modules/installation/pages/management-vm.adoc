@@ -36,7 +36,7 @@ yq -i eval '(.users.[] | select(.name = "admin") | .ssh_authorized_keys) += "'"$
 +
 [source,bash]
 ----
-ln -snf user-data.yml /vms/cloud-init/management-vm/user-date
+ln -snf user-data.yml /vms/cloud-init/management-vm/user-data
 ln -snf meta-data.yml /vms/cloud-init/management-vm/meta-data
 xorriso -as genisoimage \
     -output /vms/cloud-init/management-vm/cloud-init.iso \
