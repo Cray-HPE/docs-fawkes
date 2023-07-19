@@ -7,3 +7,14 @@ Documentation for the Fawkes project.
 == Resources
 
 For help with AsciiDoc, see link:https://docs.asciidoctor.org/asciidoc/latest/[this quick reference guide].
+
+== Contribution
+
+To contribute to this repository one may make edits to the subdirectories within the top-level `modules/` directory.
+
+`modules/ROOT`:: This is the main module, it serves as an overview and landing page. Content seldom goes here.
+`modules/installation`:: The installation module for all things installation related.
+
+If **adding a new module**, simple create a new folder under `modules`
+(following the link:https://docs.antora.org/antora/latest/module-directory-names/[Antora recommendations for module directory names])
+and then update the `antora.yml` `nav` key to refer to the new module's `nav.adoc` file.
