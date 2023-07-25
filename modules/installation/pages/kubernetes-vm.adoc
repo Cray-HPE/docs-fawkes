@@ -1,0 +1,94 @@
+= Kubernetes VM
+:toc:
+:toclevels: 3
+
+WARNING: This page is a work in progress. *This page will be automated, instead the user will be prompted before rebooting
+to disk or right after.*
+
+. Copy the kubernetes VM image from the Live CD into the appropriate location.
++
+[source,bash]
+----
+scp /data/kubernetes-vm-x86_64.qcow2 admin@10.17.37.2:/vms/images/
+----
+. Login to the Management VM
+There are two options to get started. If you're still on the 1st Hypervisor, you can login using the management-network. The address of the first management-vm will be 10.17.37.2.
+If you are no longer on the first hypervisor, then you will need to connect using the IP address the management-vm was given at boot.
++
+[source,code]
+----
+ssh root@10.17.37.2
+sudo su
+----
+. Generate an SSH key
++
+[source,code]
+----
+ssh-keygen
+----
+. Copy SSH key to Hypervisor 01
++
+[source,code]
+----
+ssh-copy-id 10.17.31.1
+----
+. Change to the working directory for deploying the first Kubernetes Master VM
++
+[source,code]
+----
+cd /srv/cray/terraform/kubernetes-master/
+----
+
+
+
+
+
+
+
+
+
+
+. Use `yq` to update `user-data`
++
+[source,code]
+----
+yq -i eval '(.users.[] | select(.name = "admin") | .ssh_authorized_keys) += "'"$(cat /root/.ssh/id_rsa.pub)"'"' /vms/cloud-init/management-vm/user-data
+----
+. Create the cloud-init ISO
++
+[source,bash]
+----
+xorriso -as genisoimage \
+    -output /vms/cloud-init/management-vm/cloud-init.iso \
+    -volid CIDATA -joliet -rock -f \
+    /vms/cloud-init/management-vm/user-data \
+    /vms/cloud-init/management-vm/meta-data
+----
+. Create a pool to store the VM images
++
+[source,bash]
+----
+virsh pool-define-as management-pool dir --target /var/lib/libvirt/management-pool
+virsh pool-build management-pool
+virsh pool-start management-pool
+virsh pool-autostart management-pool
+----
+. Upload the VM image and resize it to at least 100G
++
+[source,bash]
+----
+virsh vol-create-as --pool management-pool --name management-vm.qcow2 --capacity 100G --format qcow2
+virsh vol-upload --pool management-pool management-vm.qcow2 /vms/images/management-vm-x86_64.qcow2
+----
+. Boot the VM.
++
+[source,bash]
+----
+virsh create /srv/cray/metal-former/libvirt/domain.xml
+----
+. View the VM's console
++
+[source,bash]
+----
+virsh console management-vm
+----
