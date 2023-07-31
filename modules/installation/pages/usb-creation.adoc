@@ -94,7 +94,8 @@ sudo ./write-livecd /dev/sdX ./hypervisor.iso 50000
 ----
 sudo mkdir -p /mnt
 sudo mount -L data /mnt
-sudo cp ./management-vm.qcow2 ./kubernetes-vm.qcow2 /mnt/
+sudo mkdir -p /mnt/images
+sudo cp -p *.qcow2 /mnt/images/
 sudo umount /mnt
 ----
 . Eject the USB and plug it into the server for deployment.

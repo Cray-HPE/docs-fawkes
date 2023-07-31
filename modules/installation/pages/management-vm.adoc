@@ -2,23 +2,15 @@
 :toc:
 :toclevels: 3
 
-WARNING: This page is a work in progress. *This page will be automated, instead the user will be prompted before rebooting
-to disk or right after.*
+WARNING: This page is a work in progress. *This page will be automated, instead the user will be prompted before rebooting to disk or right after.*
 
-. Copy the management VM image from the Live CD into the appropriate location.
-+
-[source,bash]
-----
-mkdir -p /vms/images
-cp /data/*.qcow2 /vms/images/
-----
-. Copy the seed `meta-data.yml` and `user-data.yml` files into position
+. Copy the seed `meta-data` and `user-data` files into position
 +
 [source,code]
 ----
 mkdir -p /vms/cloud-init/management-vm
-cp /srv/cray/metal-former/libvirt/meta-data.yml /vms/cloud-init/management-vm
-cp /srv/cray/metal-former/libvirt/user-data.yml /vms/cloud-init/management-vm
+cp -p /srv/cray/management-vm/meta-data /vms/cloud-init/management-vm/
+cp -p /srv/cray/management-vm/user-data /vms/cloud-init/management-vm/
 ----
 . Generate an SSH key
 +
@@ -26,40 +18,68 @@ cp /srv/cray/metal-former/libvirt/user-data.yml /vms/cloud-init/management-vm
 ----
 ssh-keygen
 ----
-. Use `yq` to update `user-data.yml`
+. Use `yq` to update `user-data`
 +
 [source,code]
 ----
-yq -i eval '(.users.[] | select(.name = "admin") | .ssh_authorized_keys) += "'"$(cat /root/.ssh/id_rsa.pub)"'"' /vms/cloud-init/management-vm/user-data.yml
+yq -i eval '(.users.[] | select(.name = "admin") | .ssh_authorized_keys) += "'"$(cat /root/.ssh/id_rsa.pub)"'"' /vms/cloud-init/management-vm/user-data
 ----
 . Create the cloud-init ISO
 +
 [source,bash]
 ----
-ln -snf user-data.yml /vms/cloud-init/management-vm/user-data
-ln -snf meta-data.yml /vms/cloud-init/management-vm/meta-data
 xorriso -as genisoimage \
     -output /vms/cloud-init/management-vm/cloud-init.iso \
     -volid CIDATA -joliet -rock -f \
     /vms/cloud-init/management-vm/user-data \
     /vms/cloud-init/management-vm/meta-data
 ----
-. Resize the VM image to at least 100G
+. Create the storage pool for the management VM.
++
+NOTE: By default `CAPACITY` is set to 100 (Gigabytes).
 +
 [source,bash]
 ----
+CAPACITY=100
 virsh pool-define-as management-pool dir --target /var/lib/libvirt/management-pool
 virsh pool-build management-pool
 virsh pool-start management-pool
 virsh pool-autostart management-pool
-virsh vol-create-as --pool management-pool --name management-vm.qcow2 --capacity 100G --format qcow2
-virsh vol-upload --pool management-pool management-vm.qcow2 /vms/images/management-vm-x86_64.qcow2
+----
+. Create a virtual volume and upload the management image.
++
+[source,bash]
+----
+virsh vol-create-as --pool management-pool --name management-vm.qcow2 --capacity ${CAPACITY}G --format qcow2
+virsh vol-upload --pool management-pool management-vm.qcow2 /vms/images/management-vm/*
+----
+. Set up the local network to enable the management VM to orchestrate the initial hypervisor host
++
+// FIXME: This is not fully implemented yet, and serves as scaffolding. At this time, the network has no connectivity.
++
+[source,bash]
+----
+virsh net-define /srv/cray/management-vm/isolated.xml
+----
+. Set the interfaces for the VM
++
+IMPORTANT: Order of interfaces is important, the internal network interface (e.g. `bond0`) needs to be second.
+Any external network interface (e.g. `lan0` or `bond0.cmn0`) must be third. This way local development can be supported,
+by leaving the first interface set as the management interface and assuming it is for the host.
++
+[source,bash]
+----
+yq -i -o xml -p xml eval '.domain.devices.interface |= [
+{"source": {"+network": "isolated"}, "model": {"+type": "virtio"}},
+{"+type": "direct", "source": {"+dev": "bond0", "+mode": "bridge"}, "model": {"+type": "virtio"}},
+{"+type": "direct", "source": {"+dev": "bond0.cmn0", "+mode": "bridge"}, "model": {"+type": "virtio"}}
+]' /srv/cray/management-vm/domain.xml
 ----
 . Boot the VM.
 +
 [source,bash]
 ----
-virsh create /srv/cray/metal-former/libvirt/domain.xml
+virsh create /srv/cray/management-vm/domain.xml
 ----
 . View the VM's console
 +
