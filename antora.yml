@@ -1,8 +1,8 @@
 ---
 name: fawkes
 title: Fawkes
-version: v1.0.0
-prerelease: -alpha.1
+version: ~
+prerelease: true
 nav:
 - modules/ROOT/nav.adoc
 - modules/installation/nav.adoc
