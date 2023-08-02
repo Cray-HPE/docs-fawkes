@@ -1,0 +1,37 @@
+= Configuration
+:toc:
+:toclevels: 3
+
+== Software
+
+In your VM or bare metal hypervisor host, you will need to install the following software:
+
+. libguestfs0
+.. Necessary for editing VM files.
+
+. libvirt-client
+.. Dependency of libvirt.
+
+. libvirt-devel
+.. Dependency of libvirt.
+
+. libvirt
+.. Hypervisor virtualization API.
+
+. qemu-kvm
+.. Drivers for VMs.
+
+. qemu-ui-spice-core
+.. Necessary for providing consoles to VMs.
+
+. yq
+.. Used for modifying proof-of-concept yaml files.
+
+. kvm_server
+.. Sets up the KVM VM Host Server with QEMU tools for management
+. kvm_tools
+.. Installs the libvirt tools for managing and monitoring VM Guests
+
+== Networking
+
+The rest of the setup will assume that eth0 is the main interface.

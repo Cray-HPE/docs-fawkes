@@ -1,7 +1,6 @@
 * xref:overview.adoc[]
 ** xref:hardware-and-network-requirements.adoc[]
-** xref:usb-creation.adoc[]
-** xref:iso-installation.adoc[]
+** xref:os-installation.adoc[]
 ** xref:configuration.adoc[]
 ** xref:management-vm.adoc[]
 ** xref:kubernetes-vm.adoc[]
