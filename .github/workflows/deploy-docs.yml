@@ -1,0 +1,27 @@
+name: Deploy docs to github pages
+on:
+  push:
+    branches: [main]
+    workflow_dispatch:
+
+jobs:
+  dispatch_workflows:
+    name: Dispatch workflows
+    runs-on: [ self-hosted, self-hosted-small ]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Auth token for launching workflows
+      uses: navikt/github-app-token-generator@v1
+      id: get-token
+      with:
+        private-key: ${{ secrets.AUTOMATIC_WORKFLOW_DISPATCHER_APP_KEY }}
+        app-id: ${{ secrets.AUTOMATIC_WORKFLOW_DISPATCHER_APP_ID }}
+
+    - name: Dispatch workflows
+      env:
+        GITHUB_TOKEN: ${{ steps.get-token.outputs.token }}
+        ARTIFACTORY_ALGOL60_READONLY_USERNAME: ${{ secrets.ARTIFACTORY_ALGOL60_READONLY_USERNAME }}
+        ARTIFACTORY_ALGOL60_READONLY_TOKEN: ${{ secrets.ARTIFACTORY_ALGOL60_READONLY_TOKEN }}
+      run: echo 'test'
