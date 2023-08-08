@@ -73,4 +73,16 @@ crucible storage wipe
 crucible install
 ----
 . Copy contents from the USB to disk
+.. Load images into place.
++
+[source,bash]
+----
+mkdir /data /vms
+mount -L data /data
+mount -L VMSTORE /vms
+mkdir -p /vms/images/kubernetes-vm
+mkdir -p /vms/images/management-vm
+cp -p /data/images/kubernetes-vm*.qcow2 /vms/images/kubernetes-vm/
+cp -p /data/images/management-vm*.qcow2 /vms/images/management-vm/
+----
 . Reboot to disk

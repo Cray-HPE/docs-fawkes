@@ -56,5 +56,5 @@ crucible network interface --dhcp bond0.cmn0 --vlan-id 7 --members bond0
 [source,bash]
 ----
 crucible network system --dns 16.110.135.51,16.110.135.52
-crucible network system --search mtl,hmn,nmn
+crucible network system --search mtl
 ----
