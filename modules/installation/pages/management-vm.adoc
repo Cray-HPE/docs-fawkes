@@ -55,7 +55,6 @@ virsh vol-upload --pool management-pool management-vm.qcow2 /vms/images/manageme
 ----
 . Set up the local network to enable the management VM to orchestrate the initial hypervisor host
 +
-// FIXME: This is not fully implemented yet, and serves as scaffolding. At this time, the network has no connectivity.
 +
 [source,bash]
 ----
@@ -83,7 +82,17 @@ virsh create /srv/cray/management-vm/domain.xml
 ----
 . View the VM's console
 +
+NOTE: Leave the console by pressing the escape character `^]` (kbd:[CTRL] + kbd:[]]).
++
 [source,bash]
 ----
 virsh console management-vm
+----
+. Once the node is up and cloud-init has printed a message indicating it has finished, open a new window and SSH to the
+management-vm from the hypervisor node.
+// TODO: Change to SSH externally once we are happy with how the site-link is set up.
++
+[source,bash]
+----
+ssh -i ~/.ssh/<ssh-key> root@192.168.0.2
 ----
