@@ -13,7 +13,7 @@ This entails:
 
 == Crucible
 
-Crucible is a proof-of-concept application currently written in Python for facilitating
+xref:crucible::index.adoc[Crucible] is a proof-of-concept application currently written in Python for facilitating
 the installation of Fawkes.
 
 It is currently limited as far as configuration goes.
