@@ -55,7 +55,6 @@ virsh vol-upload --pool management-pool management-vm.qcow2 /vms/images/manageme
 ----
 . Set up the local network to enable the management VM to orchestrate the initial hypervisor host
 +
-+
 [source,bash]
 ----
 virsh net-define /srv/cray/management-vm/isolated.xml
