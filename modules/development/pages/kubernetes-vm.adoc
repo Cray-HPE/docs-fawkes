@@ -8,17 +8,15 @@ WARNING: This page is a work in progress.
 +
 [source,bash]
 ----
-scp node-images/output-kubernetes-vm-qemu/kubernetes-vm-x86_64.qcow2 root@10.17.37.2:~/
+scp node-images/output-kubernetes-vm-qemu/kubernetes-vm-x86_64.qcow2 root@192.168.0.2:~/
 ----
 . Login to the Management VM
 
-There are two options to get started. If you're still on the 1st Hypervisor, you can login using the management-network. The address of the first management-vm will be 10.17.37.2.
-
-If you are no longer on the first hypervisor, then you will need to connect using the IP address the management-vm was given at boot.
+There are two options to get started. If you're still on the 1st Hypervisor, you can login using the isolated network. The address of the management-vm will be 192.168.0.2 or whatever value was assigned in the management-vm configuration steps.
 
 [source,bash]
 ----
-ssh root@10.17.37.2
+ssh root@192.168.0.2
 ----
 . Move the kubernetes VM into the proper location
 +
@@ -37,7 +35,7 @@ ssh-keygen
 +
 [source,bash]
 ----
-ssh-copy-id 10.17.31.1
+ssh-copy-id 192.168.0.2
 ----
 . Change to the working directory for deploying the first Kubernetes Master VM
 +
@@ -49,7 +47,7 @@ cd /srv/cray/terraform/kubernetes-master/
 +
 [source,bash]
 ----
-qemu+ssh://10.17.31.1/system
+qemu+ssh://192.168.0.2/system
 ----
 . Review the plan for terraform
 +

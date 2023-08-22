@@ -29,17 +29,18 @@ ssh-keygen
 +
 [source,code]
 ----
-yq -i eval '(.users.[] | select(.name = "admin") | .ssh_authorized_keys) += "'"$(cat /root/.ssh/id_rsa.pub)"'"' /vms/cloud-init/management-vm/user-data
+yq -i eval '(.users.[] | select(.name = "root") | .ssh_authorized_keys) += "'"$(cat /root/.ssh/id_rsa.pub)"'"' /vms/cloud-init/management-vm/user-data
 ----
 . Create the cloud-init ISO
 +
 [source,bash]
 ----
 xorriso -as genisoimage \
-    -output /vms/cloud-init/management-vm/cloud-init.iso \
+    -output ~/vms/cloud-init/management-vm/cloud-init.iso \
     -volid CIDATA -joliet -rock -f \
-    /vms/cloud-init/management-vm/user-data \
-    /vms/cloud-init/management-vm/meta-data
+    ~/vms/cloud-init/management-vm/user-data \
+    ~/vms/cloud-init/management-vm/meta-data \
+    ~/vms/cloud-init/management-vm/network-config
 ----
 . Create a pool to store the VM images
 +
@@ -59,15 +60,29 @@ virsh vol-upload --pool management-pool management-vm.qcow2 /vms/images/manageme
 ----
 . Create the management network.
 +
-[source,bash]
-----
-virsh create metal-former/libvirt/dev-network.xml
-----
-. Boot the VM.
+Copy the isolated.xml file from `metal-provision` and update the values to something that makes sense for your local environment.
 +
 [source,bash]
 ----
-virsh create /srv/cray/metal-former/libvirt/dev-domain.xml
+virsh net-create metal-former/libvirt/isolated.xml
+----
+. Boot the VM.
++
+Copy the domain.xml file from `metal-provision` and update the memory and cpu values to something that will work with your local environment.
++
+Example:
++
+[source,xml]
+----
+  <memory unit='MiB'>4096</memory>
+  <vcpu>2</vcpu>
+----
++
+Boot:
++
+[source,bash]
+----
+virsh create /srv/cray/metal-former/libvirt/domain.xml
 ----
 . View the VM's console
 +
