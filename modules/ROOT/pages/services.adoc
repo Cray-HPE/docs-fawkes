@@ -1,23 +1,79 @@
-= Service Reference
+= Services
 :toc:
 
-== DNS
+== DHCP & DNS
+
+The management VM uses DNSMasq for providing DHCP and DNS services.
+
+DHCP is exclusively used on the internal network, and hardware management network (if it exists).
+
+Domains:
+
+- `.local` (local) refers to host entries that are available from the physical local server
+- `.mtl` (metal) refers to the deployment network, this is only available to hypervisors and the management VM
+- `.hmn` (hardware) refers to the hardware management network, this is used for discovering and managing BMCs
 
 |===
-|DNS Name |Endpoint
+|DNS Name(s) |Endpoint
 
-|`hypervisor.local`
+|`hypervisor.local`, `hypervisor`
 |Resolvable from within the management VM, routes to server the VM is running on.
 
-|`management-vm.local`
+|`management-vm.local`, `management-vm`
 |Resolvable to the local running management VM, if one is present.
 
-|`bootserver`
+|`bootserver.mtl`, `bootserver`
 |Resolvable to the currently running management VM's IP
 
-|`packages`
+|`packages.mtl`, `packages`
 |Resolves to the repository hosted by Nexus in the management VM.
 
-|`registry`
+|`registry.mtl`, `registry`
 |Resolves to the registry hosted by Nexus in the management VM.
 |===
+
+== HTTP / HTTPS
+
+The management VM runs An HTTP / HTTPS webserver for serving bootable artifacts.
+
+Proxies are set up for routing to other local services.
+
+
+
+== Image Registry and Package Repositories
+
+|===
+|Service |URL
+
+|Nexus endpoint for internal and external users
+|http://<management_vm_ip>/nexus
+
+|Internal DNS endpoint for packages
+|http://packages
+
+|Internal DNS endpoint for registry
+|http://registry:5000
+|===
+
+== Monitoring
+
+The management VM offers monitoring services through:
+
+- Grafana
+- Grok Exporter
+- Prometheus
+
+.These services are both internal and externally facing using the following URLs.
+|===
+|Service |URL |Proxy Port
+
+|Grafana
+|http://<management_vm_ip>/grafana
+|`3000`
+
+|Prometheus
+|http://<management_vm_ip>/prometheus
+|`9090`
+|===
+
+The "Proxy Port" refers to the port that the URL is proxying to, this is the port that the service is listening on.

@@ -86,16 +86,16 @@ crucible network interface lan0 A.B.C.D/E
 [#ssh-keys]
 === SSH Key(s)
 
-This segment must be performed on a trusted workstation with connectivity to the Fawkes cluster.
+The <<ssh-keys>> segment segment must be performed on a trusted workstation with connectivity to the Fawkes cluster.
 
-IMPORTANT: Do not perform this segment on the LiveCD to avoid the risk of being locked out of the hypervisor.
+IMPORTANT: *Do not perform this segment on the LiveCD* or you will lock yourself out of the the hypervisor.
 
 . Generate or provide one or more SSH public keys.
 +
 NOTE: Fawkes recommends generating an EdDSA (`ed25519`) key-pair, but other ciphers such as RSA are acceptable. The guide below uses `ed25519`.
 +
-IMPORTANT: *DO NOT PASTE A PRIVATE KEY INTO ANY OF THE FOLLOWING WINDOWS*.The contents should come from
-a file with a `.pub` suffix, this is the *public key*.Pasting the private key can compromise that key and prevent login after the disk installation completes.
+CAUTION: *DO NOT PASTE A PRIVATE KEY INTO ANY OF THE FOLLOWING WINDOWS*. The contents should come from
+a file with a `.pub` suffix, this is the *public key*. Pasting the private key can compromise that key and prevent login after the disk installation completes.
 +
 Generate a key on a trusted workstation, and copy/paste a public key into a new file:
 +
@@ -140,7 +140,7 @@ crucible storage wipe
 ----
 . Install the OS to disk.
 +
-NOTE: By default all `/root/.ssh/*.pub` public keys will be installed into the hypervisor. To limit this to a single key, or to use a different directory, pass the `-s` and a path.
+NOTE: By default all `/root/.ssh/*.pub` public keys will be installed into the hypervisor. To limit this to a single key, or to use a different directory, pass `-s </path/to/keys>`  when invoking `crucible`.
 +
 [source,bash]
 ----
