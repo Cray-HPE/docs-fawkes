@@ -1,4 +1,5 @@
 * xref:overview.adoc[]
+** xref:installation-requirements.adoc[]
 ** xref:hardware-and-network-requirements.adoc[]
 ** xref:usb-creation.adoc[]
 ** xref:iso-installation.adoc[]

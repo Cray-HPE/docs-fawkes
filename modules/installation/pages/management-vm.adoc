@@ -2,82 +2,15 @@
 :toc:
 :toclevels: 3
 
-WARNING: This page is a work in progress. *This page will be automated, instead the user will be prompted before rebooting to disk or right after.*
+WARNING: At this time, a new SSH key should be generated on the hypervisor to enable logging in. Run the xref:iso-installation.adoc#ssh-keys[SSH Key(s)] segment from within the hypervisor *before proceeding*.
 
-. Copy the seed `meta-data` and `user-data` files into position
+. Start the management VM.
 +
-[source,code]
-----
-mkdir -p /vms/cloud-init/management-vm
-cp -p /srv/cray/management-vm/meta-data /vms/cloud-init/management-vm/
-cp -p /srv/cray/management-vm/user-data /vms/cloud-init/management-vm/
-----
-. Generate an SSH key
-+
-[source,code]
-----
-ssh-keygen
-----
-. Use `yq` to update `user-data`
-+
-[source,code]
-----
-yq -i eval '(.users.[] | select(.name = "admin") | .ssh_authorized_keys) += "'"$(cat /root/.ssh/id_rsa.pub)"'"' /vms/cloud-init/management-vm/user-data
-----
-. Create the cloud-init ISO
+NOTE: See `--help` for optional parameters.
 +
 [source,bash]
 ----
-xorriso -as genisoimage \
-    -output /vms/cloud-init/management-vm/cloud-init.iso \
-    -volid CIDATA -joliet -rock -f \
-    /vms/cloud-init/management-vm/user-data \
-    /vms/cloud-init/management-vm/meta-data
-----
-. Create the storage pool for the management VM.
-+
-NOTE: By default `CAPACITY` is set to 100 (Gigabytes).
-+
-[source,bash]
-----
-CAPACITY=100
-virsh pool-define-as management-pool dir --target /var/lib/libvirt/management-pool
-virsh pool-build management-pool
-virsh pool-start management-pool
-virsh pool-autostart management-pool
-----
-. Create a virtual volume and upload the management image.
-+
-[source,bash]
-----
-virsh vol-create-as --pool management-pool --name management-vm.qcow2 --capacity ${CAPACITY}G --format qcow2
-virsh vol-upload --pool management-pool management-vm.qcow2 /vms/images/management-vm/*
-----
-. Set up the local network to enable the management VM to orchestrate the initial hypervisor host
-+
-[source,bash]
-----
-virsh net-define /srv/cray/management-vm/isolated.xml
-----
-. Set the interfaces for the VM
-+
-IMPORTANT: Order of interfaces is important, the internal network interface (e.g. `bond0`) needs to be second.
-Any external network interface (e.g. `lan0` or `bond0.cmn0`) must be third. This way local development can be supported,
-by leaving the first interface set as the management interface and assuming it is for the host.
-+
-[source,bash]
-----
-yq -i -o xml -p xml eval '.domain.devices.interface |= [
-{"source": {"+network": "isolated"}, "model": {"+type": "virtio"}},
-{"+type": "direct", "source": {"+dev": "bond0", "+mode": "bridge"}, "model": {"+type": "virtio"}},
-{"+type": "direct", "source": {"+dev": "bond0.cmn0", "+mode": "bridge"}, "model": {"+type": "virtio"}}
-]' /srv/cray/management-vm/domain.xml
-----
-. Boot the VM.
-+
-[source,bash]
-----
-virsh create /srv/cray/management-vm/domain.xml
+crucible vm start
 ----
 . View the VM's console
 +
@@ -89,9 +22,18 @@ virsh console management-vm
 ----
 . Once the node is up and cloud-init has printed a message indicating it has finished, open a new window and SSH to the
 management-vm from the hypervisor node.
-// TODO: Change to SSH externally once we are happy with how the site-link is set up.
 +
 [source,bash]
 ----
-ssh -i ~/.ssh/<ssh-key> root@192.168.0.2
+ssh root@192.168.0.2
+----
+. Assign IPs to the metal and hardware management network interfaces with `nmcli`
++
+NOTE: Directions coming soon, TBD via `crucible` or `nmcli`.
+. Run the `bootserver` Ansible role.
++
+[source,bash]
+----
+source /opt/cray/ansible/bin/activate
+ansible-playbook /srv/cray/metal-provision/bootserver.yml
 ----

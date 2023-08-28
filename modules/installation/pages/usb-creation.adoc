@@ -35,25 +35,32 @@ ARTIFACTORY_TOKEN
 ----
 ARCH=x86_64
 ----
+. Download the latest, stable Fawkes ISO
++
+[source,bash]
+----
+curl -C - -o fawkes-live-${ARCH}.iso \
+    "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/stable/hypervisor/\\[RELEASE\\]/hypervisor-\\[RELEASE\\]-${ARCH}.iso"
+----
 . Download the latest, stable Hypervisor ISO
 +
 [source,bash]
 ----
-curl -C - -o hypervisor.iso \
+curl -C - -o hypervisor-${ARCH}.iso \
     "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/stable/hypervisor/\\[RELEASE\\]/hypervisor-\\[RELEASE\\]-${ARCH}.iso"
 ----
 . Download the latest, stable Management VM
 +
 [source,bash]
 ----
-curl -C - -o management-vm.qcow2 \
+curl -C - -o management-vm-${ARCH}.qcow2 \
     "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/stable/hypervisor/\\[RELEASE\\]/management-vm-\\[RELEASE\\]-${ARCH}.iso"
 ----
 . Download the latest, stable Kubernetes VM
 +
 [source,bash]
 ----
-curl -C - -o kubernetes-vm.qcow2 \
+curl -C - -o kubernetes-vm-${ARCH}.qcow2 \
     "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/stable/hypervisor/\\[RELEASE\\]/kubernetes-vm-\\[RELEASE\\]-${ARCH}.iso"
 ----
 
@@ -86,7 +93,7 @@ NOTE: The target device does not need to be wiped.
 [source,bash]
 ----
 # usage: [DEVICE] [ISO] [SIZE OF COW]
-sudo ./write-livecd /dev/sdX ./hypervisor.iso 50000
+sudo ./write-livecd /dev/sdX ./fawkes-live-${ARCH}.iso 50000
 ----
 . Mount the USB and copy over our downloaded artifacts.
 +
@@ -95,7 +102,7 @@ sudo ./write-livecd /dev/sdX ./hypervisor.iso 50000
 sudo mkdir -p /mnt
 sudo mount -L data /mnt
 sudo mkdir -p /mnt/images
-sudo cp -p *.qcow2 /mnt/images/
+sudo cp -p *.iso *.qcow2 /mnt/images/
 sudo umount /mnt
 ----
 . Eject the USB and plug it into the server for deployment.

@@ -1,0 +1,23 @@
+= Service Reference
+:toc:
+
+== DNS
+
+|===
+|DNS Name |Endpoint
+
+|`hypervisor.local`
+|Resolvable from within the management VM, routes to server the VM is running on.
+
+|`management-vm.local`
+|Resolvable to the local running management VM, if one is present.
+
+|`bootserver`
+|Resolvable to the currently running management VM's IP
+
+|`packages`
+|Resolves to the repository hosted by Nexus in the management VM.
+
+|`registry`
+|Resolves to the registry hosted by Nexus in the management VM.
+|===

@@ -2,7 +2,7 @@
 :toc:
 :toclevels: 3
 
-
+[#uefi-boot]
 == UEFI Boot
 
 WARNING: Only UEFI mode is supported. Legacy BIOS mode may work, but it is strongly recommended to use UEFI mode
@@ -22,7 +22,7 @@ image::livecd-grub.png[LiveCD GRUB,align="center"]
 +
 [source,bash]
 ----
-hypervisor login:
+fawkes-live login:
 ----
 . Login as `root` with a blank password, the system will immediately prompt for the password to be changed/set.
 +
@@ -30,27 +30,35 @@ NOTE: This will only set the password for the LiveCD  `root` account, this does 
 +
 [soruce,bash]
 ----
-hypervisor login: root
+fawkes-live login: root
 Password:
 You are required to change your password immediately (administrator enforced)
 Changing password for root.
 Current password:
 New password:
 Retype new password:
- _   ___   _______ _____       _   _
-| | | \ \ / / ___ \  __/      | | | |
-| |_| |\ V /| |_/ / |__   __  | | | |
-|  _  | \ / |  __/|  __| |__| | | | |
-| | | | | | | |   | |___      \ \/ /
-\_| |/  |/   \|   |____/       \__/
+ ____ ____          _   __ _____ ___
+|  __/  _ \ |\/^\/|| | / // ___//  _\
+| |_ | /_\ ||\/ \/|| |/ / | |_  | |_
+|  _||  _  ||\/ \/||   |  |  _/ \__ \
+| |  | | | ||     || |\ \ | |___ __| |
+\_|  |/  |/ \_/V\_/|_| \_\|____//___/
 
-
-CRAY-HPE Hypervisor OS
+CRAY-HPE Fawkes LiveCD
 ----
 
-== Install to Disk
+== Pre-installation
 
-Now that the LiveCD is up, we can install the OS to disk.
+These steps will be carried out on the LiveCD for preparing the Fawkes installation.
+
+=== Prerequisites
+
+- A network with an active DHCP server or a known static IP address
+- `ssh-copy-id`
+
+=== Network access
+
+This segment is necessary for installing <<ssh-keys>> into the server.
 
 . Setup `udev` rules
 +
@@ -58,6 +66,70 @@ Now that the LiveCD is up, we can install the OS to disk.
 ----
 crucible network udev
 ----
+. Set up network access
+- Using DHCP
++
+[source,bash]
+----
+crucible network interface --dhcp lan0
+----
+- Using a static IP
++
+NOTE: Optionally set a DNS server by appending `--dns <server IP>`, additional servers may be specified using a comma delimited list (e.g. `--dns <server IP N>,<server IP N+1>`) .
++
+[source,bash]
+----
+crucible network interface lan0 A.B.C.D/E
+----
+. Exit the console, or leave it open and move to a new terminal session on a trusted workstation. Proceed to the <<ssh-keys>> section.
+
+[#ssh-keys]
+=== SSH Key(s)
+
+This segment must be performed on a trusted workstation with connectivity to the Fawkes cluster.
+
+IMPORTANT: Do not perform this segment on the LiveCD to avoid the risk of being locked out of the hypervisor.
+
+. Generate or provide one or more SSH public keys.
++
+NOTE: Fawkes recommends generating an EdDSA (`ed25519`) key-pair, but other ciphers such as RSA are acceptable. The guide below uses `ed25519`.
++
+IMPORTANT: *DO NOT PASTE A PRIVATE KEY INTO ANY OF THE FOLLOWING WINDOWS*.The contents should come from
+a file with a `.pub` suffix, this is the *public key*.Pasting the private key can compromise that key and prevent login after the disk installation completes.
++
+Generate a key on a trusted workstation, and copy/paste a public key into a new file:
++
+- With a passphrase:
++
+[source,bash]
+----
+ssh-keygen -t ed25519
+----
++
+- Without a passphrase:
++
+[source,bash]
+----
+ssh-keygen -q -t ed25519 -N ''
+----
+. Optionally import the key to make the subsequent steps passwordless, otherwise proceed to the next step.
++
+[source,bash]
+----
+ssh-import-id root@A.B.C.D
+----
+. Copy the *public* key to the LiveCD, authenticate with the password that was set in <<uefi-boot>> if the passwordless SSH step was not completed.
++
+[source,bash]
+----
+scp -p <path/to/key>.pub root@A.B.C.D:/root/.ssh/
+----
+
+== Installation
+
+This segment will wipe the server and install the hypervisor image to disk.
+
+. Return to the previous console session, or start a new SSH session.
 . Wipe the server.
 +
 WARNING: This will wipe all storage disks on the server with exception to USB devices.
@@ -68,21 +140,14 @@ crucible storage wipe
 ----
 . Install the OS to disk.
 +
+NOTE: By default all `/root/.ssh/*.pub` public keys will be installed into the hypervisor. To limit this to a single key, or to use a different directory, pass the `-s` and a path.
++
 [source,bash]
 ----
 crucible install
 ----
-. Copy contents from the USB to disk
-.. Load images into place.
-+
-[source,bash]
-----
-mkdir /data /vms
-mount -L data /data
-mount -L VMSTORE /vms
-mkdir -p /vms/images/kubernetes-vm
-mkdir -p /vms/images/management-vm
-cp -p /data/images/kubernetes-vm*.qcow2 /vms/images/kubernetes-vm/
-cp -p /data/images/management-vm*.qcow2 /vms/images/management-vm/
-----
 . Reboot to disk
++
+TIP: At this time the hypervisor does have a password login similar to the LiveCD. Entering a blank password will prompt you to create a new password. This is only allowed during prototyping, and will be removed in an upcoming alpha release.
+
+The install will have also copied all the data from `/data` to a `/vms/assets` directory. This directory is available once the hypervisor has booted.

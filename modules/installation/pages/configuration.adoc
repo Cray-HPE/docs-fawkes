@@ -19,13 +19,12 @@ Changing password for root.
 Current password:
 New password:
 Retype new password:
- _   ___   _______ _____       _   _
-| | | \ \ / / ___ \  __/      | | | |
-| |_| |\ V /| |_/ / |__   __  | | | |
-|  _  | \ / |  __/|  __| |__| | | | |
-| | | | | | | |   | |___      \ \/ /
-\_| |/  |/   \|   |____/       \__/
-
+ _   ___   _______ ___________  _   _  _____  ___     _    _____
+| | | \ \ / / ___ \  __// ___ \| | | ||_   _|/  _\ .-' `-./ ___ \
+| |_| |\ V /| |_/ / |__ | |_/ /| | | |  | |  | |_ ||  _  || |_/ /
+|  _  | \ / |  __/|  __||    / | | | |  | |  \__ `|| |_| ||    /
+| | | | | | | |   | |___| |\ \ \ \/ /  _| |_  __| ||     || |\ \
+\_| |/  |/   \|   |____/|_| \_| \__/  |_____|/___/ `-._.-'|_| \_|
 
 CRAY-HPE Hypervisor OS
 ----
@@ -34,8 +33,6 @@ CRAY-HPE Hypervisor OS
 +
 [source,bash]
 ----
-crucible network interface --noip mgmt0
-crucible network interface --noip mgmt1
 crucible network interface --noip bond0 --members mgmt0,mgmt1
 ----
 . Configure the site-link.
