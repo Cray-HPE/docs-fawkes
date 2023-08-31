@@ -4,13 +4,13 @@
 
 WARNING: At this time, a new SSH key should be generated on the hypervisor to enable logging in. Run the xref:iso-installation.adoc#ssh-keys[SSH Key(s)] segment from within the hypervisor *before proceeding*.
 
-. Start the management VM.
+. Start the management VM, provide the external IP address and DNS for remotely logging into the VM.
 +
 NOTE: See `--help` for optional parameters.
 +
 [source,bash]
 ----
-crucible vm start
+crucible vm start --ip-address "10.100.254.5/24" --dns "16.110.135.51,16.110.135.52" --system-name "redbull"
 ----
 . View the VM's console
 +
@@ -21,15 +21,12 @@ NOTE: Leave the console by pressing the escape character `^]` (kbd:[CTRL] + kbd:
 virsh console management-vm
 ----
 . Once the node is up and cloud-init has printed a message indicating it has finished, open a new window and SSH to the
-management-vm from the hypervisor node.
+management-vm from the trusted workstation.
 +
 [source,bash]
 ----
-ssh root@192.168.0.2
+ssh root@10.100.254.5
 ----
-. Assign IPs to the metal and hardware management network interfaces with `nmcli`
-+
-NOTE: Directions coming soon, TBD via `crucible` or `nmcli`.
 . Run the `bootserver` Ansible role.
 +
 [source,bash]
