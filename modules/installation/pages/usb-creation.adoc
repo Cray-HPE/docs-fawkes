@@ -37,10 +37,12 @@ ARCH=x86_64
 ----
 . Download the latest, stable Fawkes ISO
 +
+NOTE: To use a proxy, add `--proxy http://example.com:443` to each `curl` call.
++
 [source,bash]
 ----
 curl -C - -o fawkes-live-${ARCH}.iso \
-    "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/stable/hypervisor/\\[RELEASE\\]/hypervisor-\\[RELEASE\\]-${ARCH}.iso"
+    "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/stable/fawkes-live/\\[RELEASE\\]/fawkes-live-\\[RELEASE\\]-${ARCH}.iso"
 ----
 . Download the latest, stable Hypervisor ISO
 +
@@ -54,14 +56,14 @@ curl -C - -o hypervisor-${ARCH}.iso \
 [source,bash]
 ----
 curl -C - -o management-vm-${ARCH}.qcow2 \
-    "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/stable/hypervisor/\\[RELEASE\\]/management-vm-\\[RELEASE\\]-${ARCH}.iso"
+    "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/stable/management-vm/\\[RELEASE\\]/management-vm-\\[RELEASE\\]-${ARCH}.qcow2"
 ----
 . Download the latest, stable Kubernetes VM
 +
 [source,bash]
 ----
 curl -C - -o kubernetes-vm-${ARCH}.qcow2 \
-    "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/stable/hypervisor/\\[RELEASE\\]/kubernetes-vm-\\[RELEASE\\]-${ARCH}.iso"
+    "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/stable/kubernetes-vm/\\[RELEASE\\]/kubernetes-vm-\\[RELEASE\\]-${ARCH}.qcow2"
 ----
 
 == Linux
