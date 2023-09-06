@@ -2,7 +2,6 @@
 :toc:
 :toclevels: 3
 
-
 == Bare-Metal Hardware
 
 Using the instructions from your OS and your specific hardware, install a Linux-based OS.

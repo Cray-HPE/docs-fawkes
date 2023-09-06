@@ -31,5 +31,4 @@ or above is recommended.
 
 |Disk Quantity
 |1 for testing; Minimum space 100GB.
-
-
+|===

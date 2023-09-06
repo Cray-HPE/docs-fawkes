@@ -4,6 +4,6 @@ This module will guide a user through the installation of the Fawkes project usi
 
 This entails:
 
-* Setting up a host machine or VM to act as the Hypervisor
+* Setting up hypervisor host
 * Launching the Management VM
 * Launching the Kubernetes VMs

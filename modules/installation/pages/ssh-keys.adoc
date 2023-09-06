@@ -6,9 +6,11 @@ SSH keys will need to be configured for Ansible to work.
 
 Tasks in the Management VM
 
-- Create a repo calls ssh-keys
+- Create a repo called ssh-keys
 - Add credentials to local repo
 - Push repo to Gitea
+
+Steps:
 
 . Create SSH key for node administration.
 +

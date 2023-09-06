@@ -10,9 +10,8 @@ WARNING: This page is a work in progress.
 ----
 scp node-images/output-kubernetes-vm-qemu/kubernetes-vm-x86_64.qcow2 root@192.168.0.2:~/
 ----
-. Login to the Management VM
-
-There are two options to get started. If you're still on the 1st Hypervisor, you can login using the isolated network. The address of the management-vm will be 192.168.0.2 or whatever value was assigned in the management-vm configuration steps.
+. Log in to the Management VM
+From the hypervisor you can log in using the isolated network. The address of the first management-vm will be 192.168.0.2. The management-vm will resolve from `/etc/hosts`, its IP may also be found by running `virsh net-dhcp-leases isolated`.
 
 [source,bash]
 ----
@@ -61,8 +60,3 @@ terraform plan
 ----
 terraform apply
 ----
-
-
-
-
-

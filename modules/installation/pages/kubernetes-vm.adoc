@@ -12,8 +12,7 @@ to disk or right after.*
 scp /data/kubernetes-vm-x86_64.qcow2 admin@10.17.37.2:/vms/images/
 ----
 . Login to the Management VM
-There are two options to get started. If you're still on the 1st Hypervisor, you can login using the management-network. The address of the first management-vm will be 10.17.37.2.
-If you are no longer on the first hypervisor, then you will need to connect using the IP address the management-vm was given at boot.
+From the hypervisor you can log in using the isolated network. The address of the first management-vm will be 192.168.0.2. The management-vm will resolve from `/etc/hosts`, its IP may also be found by running `virsh net-dhcp-leases isolated`.
 +
 [source,code]
 ----
