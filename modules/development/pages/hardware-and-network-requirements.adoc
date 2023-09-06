@@ -6,7 +6,7 @@ There are minimum node hardware and network requirements necessary for installat
 
 == Hardware requirements
 
-The Fawkes hypervisor have the following requirements and recommendations for installation and testing.
+The Fawkes hypervisor has the following requirements and recommendations for installation and testing.
 
 === Hypervisor Node Requirements
 
@@ -19,7 +19,7 @@ the management and Kubernetes VMs.
 |Type |Requirements and Recommendations
 
 |CPU
-|x86_64.footnote:support[aarch64 artifacts are not built at this time for hypervisors.] Hardware-assisted virtualization is required.
+|x86_64.footnote:support[hypervisor aarch64 artifacts are not built at this time.] Hardware-assisted virtualization is required.
 8-core processor minimum for testing; 16-core
 or above is recommended.
 

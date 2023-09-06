@@ -6,7 +6,8 @@ SSH keys will need to be configured for Ansible to work.
 
 Tasks in the Management VM
 
-- Create a repo called ssh-keys
+- Create a gitea user
+- Create a repo called ssh-public-keys
 - Add credentials to local repo
 - Push repo to Gitea
 
@@ -46,7 +47,7 @@ TIP: Save this token somewhere safe, it will only be printed this one time.
 gitea -c /etc/gitea/gitea.ini admin user generate-access-token --username <username> --scopes all --token-name token1
 ----
 +
-. Exit the `gitea` user and continue as root. Create the initial remote repo
+. Exit the `gitea` user and continue as root. Create the initial remote repo using the token created in the previous step.
 +
 [source,bash]
 ----
@@ -55,7 +56,7 @@ curl \
 >   -H "accept: application/json" \
 >   -H "Authorization: token MYTOKEN" \
 >   -H "Content-Type: application/json" \
->   -d "{\"name\": \"ssh-keys\"}" \
+>   -d "{\"name\": \"ssh-public-keys\"}" \
 >   -i
 ----
 +
@@ -71,19 +72,18 @@ X-Frame-Options: SAMEORIGIN
 Date: Fri, 18 Aug 2023 21:11:36 GMT
 Content-Length: 1911
 
-{"id":1,"owner":{"id":1,"login":"username","login_name":"","full_name":"","email":"root@localhost","avatar_url":"http://localhost:3000/avatars/b1a4b2518dbbdd47dd4a713d5cd1df94","language":"","is_admin":false,"last_login":"0001-01-01T00:00:00Z","created":"2023-08-18T21:04:05Z","restricted":false,"active":false,"prohibit_login":false,"location":"","website":"","description":"","visibility":"public","followers_count":0,"following_count":0,"starred_repos_count":0,"username":"metal"},"name":"ssh-keys","full_name":"metal/ssh-keys","description":"","empty":true,"private":false,"fork":false,"template":false,"parent":null,"mirror":false,"size":24,"language":"","languages_url":"http://localhost:3000/api/v1/repos/metal/ssh-keys/languages","html_url":"http://localhost:3000/metal/ssh-keys","link":"","ssh_url":"ssh://gitea@localhost:2222/metal/ssh-keys.git","clone_url":"http://localhost:3000/metal/ssh-keys.git","original_url":"","website":"","stars_count":0,"forks_count":0,"watchers_count":0,"open_issues_count":0,"open_pr_counter":0,"release_counter":0,"default_branch":"main","archived":false,"created_at":"2023-08-18T21:11:36Z","updated_at":"2023-08-18T21:11:36Z","archived_at":"1970-01-01T00:00:00Z","permissions":{"admin":true,"push":true,"pull":true},"has_issues":true,"internal_tracker":{"enable_time_tracker":true,"allow_only_contributors_to_track_time":true,"enable_issue_dependencies":true},"has_wiki":true,"has_pull_requests":true,"has_projects":true,"has_releases":true,"has_packages":true,"has_actions":false,"ignore_whitespace_conflicts":false,"allow_merge_commits":true,"allow_rebase":true,"allow_rebase_explicit":true,"allow_squash_merge":true,"allow_rebase_update":true,"default_delete_branch_after_merge":false,"default_merge_style":"merge","default_allow_maintainer_edit":false,"avatar_url":"","internal":false,"mirror_interval":"","mirror_updated":"0001-01-01T00:00:00Z","repo_transfer":null}
+{"id":1,"owner":{"id":1,"login":"username","login_name":"","full_name":"","email":"root@localhost","avatar_url":"http://localhost:3000/avatars/b1a4b2518dbbdd47dd4a713d5cd1df94","language":"","is_admin":false,"last_login":"0001-01-01T00:00:00Z","created":"2023-08-18T21:04:05Z","restricted":false,"active":false,"prohibit_login":false,"location":"","website":"","description":"","visibility":"public","followers_count":0,"following_count":0,"starred_repos_count":0,"username":"metal"},"name":"ssh-public-keys","full_name":"metal/ssh-public-keys","description":"","empty":true,"private":false,"fork":false,"template":false,"parent":null,"mirror":false,"size":24,"language":"","languages_url":"http://localhost:3000/api/v1/repos/metal/ssh-public-keys/languages","html_url":"http://localhost:3000/metal/ssh-public-keys","link":"","ssh_url":"ssh://gitea@localhost:2222/metal/ssh-public-keys.git","clone_url":"http://localhost:3000/metal/ssh-public-keys.git","original_url":"","website":"","stars_count":0,"forks_count":0,"watchers_count":0,"open_issues_count":0,"open_pr_counter":0,"release_counter":0,"default_branch":"main","archived":false,"created_at":"2023-08-18T21:11:36Z","updated_at":"2023-08-18T21:11:36Z","archived_at":"1970-01-01T00:00:00Z","permissions":{"admin":true,"push":true,"pull":true},"has_issues":true,"internal_tracker":{"enable_time_tracker":true,"allow_only_contributors_to_track_time":true,"enable_issue_dependencies":true},"has_wiki":true,"has_pull_requests":true,"has_projects":true,"has_releases":true,"has_packages":true,"has_actions":false,"ignore_whitespace_conflicts":false,"allow_merge_commits":true,"allow_rebase":true,"allow_rebase_explicit":true,"allow_squash_merge":true,"allow_rebase_update":true,"default_delete_branch_after_merge":false,"default_merge_style":"merge","default_allow_maintainer_edit":false,"avatar_url":"","internal":false,"mirror_interval":"","mirror_updated":"0001-01-01T00:00:00Z","repo_transfer":null}
 ----
-. Grab the `clone_url` from the output and setup the repo with your public ssh key
+. Copy the `clone_url` from the output above and setup the repo with your public ssh key
 +
-[source,text]
+[source,bash]
 ----
+jq -n --rawfile keys /root/.ssh/admin.pub '.ssh_authorized_keys=[$keys]' >ssh-public-keys.json
 git config --global user.email "root@localhost"
 git config --global user.name "metal"
-git clone http://localhost:3000/metal/ssh-keys.git
-cd ssh-keys
-cp ~/.ssh/admin.pub ./
-git add admin.pub
+git clone http://localhost:3000/metal/ssh-public-keys.git
+cd ssh-public-keys
+git add ssh-public-keys.json
 git commit -m "Add public ssh key"
 git push
 ----
-TODO: Next steps for exposing the keys.
