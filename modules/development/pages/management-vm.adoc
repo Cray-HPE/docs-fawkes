@@ -77,6 +77,12 @@ Example:
   <memory unit='MiB'>4096</memory>
   <vcpu>2</vcpu>
 ----
+Alternatively, use Ansible to generate the file from the template:
++
+[source,bash]
+----
+ansible localhost -e @roles/node_images_hypervisor/defaults/main.yml -c local -m template -a "src=roles/node_images_hypervisor/templates/bootstrap/domain.xml.j2 dest=domain.xml"
+----
 +
 Boot:
 +
