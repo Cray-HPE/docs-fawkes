@@ -34,7 +34,7 @@ CRAY-HPE Hypervisor OS
 [source,bash]
 ----
 crucible network interface --noip bond0 --members mgmt0,mgmt1
-crucible network interface --noip bond0.hmn0 --members bond0
+crucible network interface --noip bond0.hmn0 --vlan-id 4 --members bond0
 ----
 . Configure the site-link.
 +
