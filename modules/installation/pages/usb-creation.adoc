@@ -4,7 +4,7 @@
 
 == Downloading
 
-NOTE: For the time being, the artifacts are downloaded indivudually and from a private mirror.
+NOTE: For the time being, the artifacts are downloaded individually and from a private mirror.
 In the near future these will be available in a single artifact from a public mirror.
 
 === Prerequisites
