@@ -11,13 +11,17 @@ WARNING: This page is a work in progress.
 mkdir -p /vms/images
 cp node-images/output-management-vm-qemu/management-vm-x86_64.qcow2 /vms/images/
 ----
-. Copy the seed `meta-data` and `user-data` files into position
+. Copy the seed files, `meta-data`, `user-data`, and `network-config` into position
 +
 [source,code]
 ----
 mkdir -p /vms/cloud-init/management-vm
-cp /srv/cray/metal-former/libvirt/meta-data /vms/cloud-init/management-vm
-cp /srv/cray/metal-former/libvirt/user-data /vms/cloud-init/management-vm
+
+ansible localhost -e @roles/node_images_hypervisor/defaults/main.yml -c local -m template -a "src=roles/node_images_hypervisor/templates/bootstrap/user-data.yml.j2 dest=user-data"
+
+cp metal-provision/roles/node_images_hypervisor/files/bootstrap/meta-data /vms/cloud-init/management-vm/meta-data
+cp metal-provision/roles/node_images_hypervisor/templates/bootstrap/user-data.yml.j2 /vms/cloud-init/management-vm/user-data
+cp metal-provision/roles/node_images_hypervisor/files/bootstrap/network-config /vms/cloud-init/management-vm/network-config
 ----
 . Generate an SSH key
 +
@@ -61,10 +65,12 @@ virsh vol-upload --pool management-pool management-vm.qcow2 /vms/images/manageme
 . Create the management network.
 +
 Copy the isolated.xml file from `metal-provision` and update the values to something that makes sense for your local environment.
+ansible localhost -e @roles/node_images_hypervisor/defaults/main.yml -c local -m template -a "src=roles/node_images_hypervisor/templates/bootstrap/isolated.xml.j2 dest=isolated.xml"
+
 +
 [source,bash]
 ----
-virsh net-create metal-former/libvirt/isolated.xml
+virsh net-create /vms/isolated.xml
 ----
 . Boot the VM.
 +
@@ -88,7 +94,7 @@ Boot:
 +
 [source,bash]
 ----
-virsh create /srv/cray/metal-former/libvirt/domain.xml
+virsh create /vms/domain.xml
 ----
 . View the VM's console
 +
@@ -100,5 +106,5 @@ virsh console management-vm
 +
 [source,bash]
 ----
-ssh root@10.17.37.2
+ssh root@192.168.0.2
 ----
