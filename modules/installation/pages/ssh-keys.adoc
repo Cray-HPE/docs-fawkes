@@ -52,12 +52,12 @@ gitea -c /etc/gitea/gitea.ini admin user generate-access-token --username <usern
 [source,bash]
 ----
 curl \
->   -X POST "http://localhost:3000/api/v1/user/repos" \
->   -H "accept: application/json" \
->   -H "Authorization: token MYTOKEN" \
->   -H "Content-Type: application/json" \
->   -d "{\"name\": \"ssh-public-keys\"}" \
->   -i
+   -X POST "http://localhost/git/api/v1/user/repos" \
+   -H "accept: application/json" \
+   -H "Authorization: token MYTOKEN" \
+   -H "Content-Type: application/json" \
+   -d "{\"name\": \"ssh-public-keys\"}" \
+   -i
 ----
 +
 The output should look similar to this:
