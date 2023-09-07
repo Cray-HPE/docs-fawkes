@@ -72,8 +72,8 @@ The Linux method will enable persistence as well as data storage for bringing ar
 * `blkid`
 * `dd`
 * `mktemp`
-* `sgdisk`
 * `parted`
+* `sgdisk`
 
 === Creating the USB
 
