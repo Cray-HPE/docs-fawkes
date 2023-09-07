@@ -92,7 +92,7 @@ NOTE: The target device does not need to be wiped.
 [source,bash]
 ----
 # usage: [DEVICE] [ISO] [SIZE OF COW]
-sudo ./write-livecd /dev/sdX ./fawkes-live-${ARCH}.iso 50000
+sudo ./write-livecd.sh /dev/sdX ./fawkes-live-${ARCH}.iso 50000
 ----
 . Mount the USB and copy over our downloaded artifacts.
 +
