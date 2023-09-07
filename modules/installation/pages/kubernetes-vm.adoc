@@ -2,21 +2,20 @@
 :toc:
 :toclevels: 3
 
-WARNING: This page is a work in progress. *This page will be automated, instead the user will be prompted before rebooting
-to disk or right after.*
+WARNING: This page is a work in progress.
 
 . Copy the kubernetes VM image from the Live CD into the appropriate location.
 +
 [source,bash]
 ----
-scp /data/kubernetes-vm-x86_64.qcow2 admin@10.17.37.2:/vms/images/
+scp /data/kubernetes-vm-x86_64.qcow2 management-vm:/vms/images/
 ----
 . Login to the Management VM
-From the hypervisor you can log in using the isolated network. The address of the first management-vm will be 192.168.0.2. The management-vm will resolve from `/etc/hosts`, its IP may also be found by running `virsh net-dhcp-leases isolated`.
+From the hypervisor you can log in using the isolated network. The address of the first management-vm will be management-vm. The management-vm will resolve from `/etc/hosts`, its IP may also be found by running `virsh net-dhcp-leases isolated`.
 +
 [source,code]
 ----
-ssh root@10.17.37.2
+ssh root@management-vm
 sudo su
 ----
 . Generate an SSH key
@@ -29,11 +28,29 @@ ssh-keygen
 +
 [source,code]
 ----
-ssh-copy-id 10.17.31.1
+ssh-copy-id hypervisor
 ----
 . Change to the working directory for deploying the first Kubernetes Master VM
 +
 [source,code]
 ----
 cd /srv/cray/terraform/kubernetes-master/
+----
+. Set the var for the QEMU system URI
++
+[source,bash]
+----
+qemu+ssh://192.168.0.2/system
+----
+. Review the plan for terraform
++
+[source,bash]
+----
+terraform plan
+----
+. Execute terraform
++
+[source,bash]
+----
+terraform apply
 ----
