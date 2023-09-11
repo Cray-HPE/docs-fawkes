@@ -1,0 +1,83 @@
+= OS Configuration
+:toc:
+:toclevels: 3
+
+== Software
+
+The hypervisor host requires the following software:
+
+`kvm_server`:: Sets up the KVM VM Host Server with QEMU tools for management
+`kvm_tools`:: Installs the libvirt tools for managing and monitoring VM Guests
+`libguestfs0`:: Necessary for editing VM files.
+`libvirt-client`:: Dependency of libvirt.
+`libvirt-devel`:: Dependency of libvirt.
+`libvirt`:: Hypervisor virtualization API.
+`qemu-kvm`:: Drivers for VMs.
+`qemu-ui-spice-core`:: Necessary for providing consoles to VMs.
+`yq`:: Used for modifying proof-of-concept yaml files.
+
+Please install the listed software before proceeding to launch any virtual machines on the hypervisor host.
+
+=== Automatic Setup
+
+For installing the same packages the pipeline installs, run the setup below.
+
+. Clone metal-provision
+.. HTTPS:
++
+[source,bash]
+----
+git clone https://github.com/Cray-HPE/metal-provision.git
+----
+.. SSH:
++
+[source,bash]
+----
+git@github.com:Cray-HPE/metal-provision.git
+----
+. Install Ansible
++
+[source,bash]
+----
+. /srv/cray/metal-provision/scripts/packer/setup-functions.sh
+install_ansible
+----
+. Run the hypervisor playbook, this assumes repositories are already set up.If not, see <<internal-repository-setup>>.
++
+[source,bash]
+----
+cat << EOF >/tmp/inventory
+[hypervisor]
+packer
+EOF
+/opt/cray/ansible/bin/ansible-playbook -c local -i /tmp/inventory /srv/cray/metal-provision/pb_node_images_libvirt.yml
+
+cat << EOF >/tmp/inventory
+[hypervisor]
+localhost
+ EOF
+/opt/cray/ansible/bin/ansible-playbook -c local -i /tmp/inventory /srv/cray/metal-provision/pb_node_images_hypervisor.yml
+----
+
+[#internal-repository-setup]
+=== Internal Repository Setup
+
+The following steps will provide assistance for adding internal repositories that provide the above packages.
+
+. Set Credentials
++
+[source,bash]
+----
+export ARTIFACTORY_USER=
+----
++
+[source,bash]
+----
+export ARTIFACTORY_TOKEN=
+----
+. Run the setup repositories script:
+[source,bash]'
+----
+. /srv/cray/metal-provision/scripts/packer/setup-functions.sh
+setup_repositories
+----

@@ -1,0 +1,13 @@
+= Overview
+
+This module will guide a user through the installation of the Fawkes project using a local development environment.
+
+This entails:
+
+* Setting up a host as a hypervisor
+* Launching the Management VM
+* Launching the Kubernetes VMs
+
+== Requirements
+
+For hardware requirements, see xref:installation:hardware-and-network-requirements.adoc[] document. Pay attention to the requirements pertaining to "testing".

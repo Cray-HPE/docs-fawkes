@@ -54,7 +54,6 @@ These steps will be carried out on the LiveCD for preparing the Fawkes installat
 === Prerequisites
 
 - A network with an active DHCP server or a known static IP address
-- `ssh-copy-id`
 
 === Network access
 

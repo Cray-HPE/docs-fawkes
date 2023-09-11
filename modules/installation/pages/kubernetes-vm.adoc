@@ -1,0 +1,25 @@
+= Kubernetes VM
+:toc:
+:toclevels: 3
+
+WARNING: This page is a work in progress.
+
+. Login to the Management VM if not already.
+. Change to the Terraform directory for deploying Kubernetes VMs
++
+[source,code]
+----
+cd /srv/cray/terraform/
+----
+. Review the plan for terraform
++
+[source,bash]
+----
+terraform plan -var-file="prod.tfvars"
+----
+. Execute terraform
++
+[source,bash]
+----
+terraform apply -var-file="prod.tfvars"
+----

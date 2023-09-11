@@ -1,0 +1,22 @@
+= OS Installation
+:toc:
+:toclevels: 3
+
+== Bare-Metal Hardware
+
+Using the instructions from your OS and your specific hardware, install a Linux-based OS.
+
+Recommended Distros:
+
+- SLES 15.5
+- OpenSUSE Leap 15.5
+
+Other distros will work, but mileage may vary. This guide only supports those listed above.
+
+== Virtual Machine Host
+
+One can use a virtual machine as the hypervisor host, but the virtualization software running the VM must support nested virtualization.
+
+An example of the option is shown below in VMWare Fusion:
+
+image::vm-virtualization.png[POST,align="center"]

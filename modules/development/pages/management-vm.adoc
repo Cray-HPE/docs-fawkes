@@ -1,0 +1,141 @@
+= Management VM
+:toc:
+:toclevels: 3
+
+WARNING: This page is a work in progress.
+
+This page assumes that a management VM was built locally.
+
+. Become root.
++
+[source,bash]
+----
+su -
+----
+. Copy the management VM image from `node-images` into the appropriate location.
++
+[source,bash]
+----
+mkdir -p /vms/images
+cp node-images/output-management-vm-qemu/management-vm-x86_64.qcow2 /vms/images/
+----
+. Copy the cloud-init seed files into our cloud-init workarea.
++
+[source,code]
+----
+mkdir -p /vms/cloud-init/management-vm
+cp metal-provision/roles/node_images_hypervisor/files/bootstrap/* /vms/cloud-init/management-vm/
+----
+. Generate an SSH key, this will be used by the developer to login to the management VM.
++
+- With a passphrase:
++
+[source,bash]
+----
+ssh-keygen -t ed25519
+----
++
+- Without a passphrase:
++
+[source,bash]
+----
+ssh-keygen -q -t ed25519 -N ''
+----
+. Use `yq` to update `user-data`
++
+[source,code]
+----
+yq -i eval '(.users.[] | select(.name = "root") | .ssh_authorized_keys) += "'"$(cat /root/.ssh/id_ed25519.pub)"'"' /vms/cloud-init/management-vm/user-data
+----
+. Setup the deployment SSH key; create the key, setup cloud-init to install the key into `root`, and then include new public key in your hypervisor's authorized keys.
++
+[source,bash]
+----
+MGMTCLOUD=/vms/cloud-init/management-vm
+SSH_TEMP="$(mktemp -d)"
+DEPLOYMENT_SSH_KEY_TYPE=ed25519
+ssh-keygen -q -t $DEPLOYMENT_SSH_KEY_TYPE -N '' -C 'deployment_id' -f "$SSH_TEMP/deployment_id" <<< y >/dev/null 2>&1
+yq -i eval '(.ssh_keys.'"$DEPLOYMENT_SSH_KEY_TYPE"'_private = "'"$(sed '$a\' "$SSH_TEMP/deployment_id")"'")' "${MGMTCLOUD}/user-data"
+yq -i eval '(.ssh_keys.'"$DEPLOYMENT_SSH_KEY_TYPE"'_public = "'"$(sed '$a\' "$SSH_TEMP/deployment_id.pub")"'")' "${MGMTCLOUD}/user-data"
+yq -i eval '.runcmd += ["cp -p /etc/ssh/ssh_host_'"$DEPLOYMENT_SSH_KEY_TYPE"'_key /root/.ssh/id_'"$DEPLOYMENT_SSH_KEY_TYPE"'"]' "${MGMTCLOUD}/user-data"
+yq -i eval '.runcmd += ["cp -p /etc/ssh/ssh_host_'"$DEPLOYMENT_SSH_KEY_TYPE"'_key.pub /root/.ssh/id_'"$DEPLOYMENT_SSH_KEY_TYPE"'.pub"]' "${MGMTCLOUD}/user-data"
+yq -i eval '.runcmd += ["sed -i'\'''\'' '\''$a\\'\'' /root/.ssh/id_'"$DEPLOYMENT_SSH_KEY_TYPE"'"]' "${MGMTCLOUD}/user-data"
+yq -i eval '.runcmd += ["sed -i'\'''\'' '\''$a\\'\'' /root/.ssh/id_'"$DEPLOYMENT_SSH_KEY_TYPE"'.pub"]' "${MGMTCLOUD}/user-data"
+yq -i eval '.runcmd += ["ssh-keyscan -H hypervisor.local hypervisor >> /root/.ssh/known_hosts 2>/dev/null"]' "${MGMTCLOUD}/user-data"
+sed -i'' '/deployment_id$/d' /root/.ssh/authorized_keys
+cat "$SSH_TEMP/deployment_id.pub" >> /root/.ssh/authorized_keys
+rm -rf "$SSH_TEMP"
+----
+. Create the cloud-init ISO
++
+[source,bash]
+----
+xorriso -as genisoimage \
+    -output ~/vms/cloud-init/management-vm/cloud-init.iso \
+    -volid CIDATA -joliet -rock -f \
+    /vms/cloud-init/management-vm/user-data \
+    /vms/cloud-init/management-vm/meta-data \
+    /vms/cloud-init/management-vm/network-config
+----
+. Create a pool to store the VM images
++
+[source,bash]
+----
+virsh pool-define-as management-pool dir --target /var/lib/libvirt/management-pool
+virsh pool-start --build management-pool
+virsh pool-autostart management-pool
+----
+. Upload the VM image and resize it to at least 100G
++
+[source,bash]
+----
+CAPACITY=100
+virsh vol-create-as --pool management-pool --name management-vm.qcow2 "$((CAPACITY - 1))}G" --prealloc-metadata --format qcow2
+virsh vol-upload --sparse --pool management-pool management-vm.qcow2 --file /vms/images/management-vm-x86_64.qcow2
+virsh vol-resize --pool management-pool management-vm.qcow2 $((CAPACITY))G
+----
+. Create the management network.
++
+Copy the `isolated.xml` file from `metal-provision` and update the values to something that makes sense for your local environment.
++
+[source,bash]
+----
+ansible localhost -e @roles/node_images_hypervisor/defaults/main.yml -c local -m template -a "src=roles/node_images_hypervisor/templates/bootstrap/isolated.xml.j2 dest=isolated.xml"
+virsh net-create /vms/isolated.xml
+----
+. Boot the VM.
++
+Copy the domain.xml file from `metal-provision` and update the memory and cpu values to something that will work with your local environment.
++
+Example:
++
+[source,xml]
+----
+  <memory unit='MiB'>4096</memory>
+  <vcpu>2</vcpu>
+----
+Alternatively, use Ansible to generate the file from the template:
++
+[source,bash]
+----
+ansible localhost -e @roles/node_images_hypervisor/defaults/main.yml -c local -m template -a "src=roles/node_images_hypervisor/templates/bootstrap/domain.xml.j2 dest=domain.xml"
+----
++
+Boot:
++
+[source,bash]
+----
+virsh create /vms/domain.xml
+----
+. View the VM's console
++
+[source,bash]
+----
+virsh console management-vm
+----
+. Login to the VM
++
+[source,bash]
+----
+ssh root@192.168.0.2
+----
