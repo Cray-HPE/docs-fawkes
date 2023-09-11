@@ -1,0 +1,120 @@
+= Gitea
+:toc:
+:toclevels: 3
+
+Now that the management VM has been set up, an SSH public key repository must be configured before deploying additional hypervisor servers.
+
+- Create a gitea user
+- Create a repo called ssh-public-keys
+- Add credentials to local repo
+- Push repo to Gitea
+
+Steps:
+
+. Migrate the Gitea database.
++
+[soruce,bash]
+----
+sudo -u gitea -i gitea -c /etc/gitea/gitea.ini migrate
+----
+. Create a Gitea user.
++
+[source,bash]
+----
+sudo -u gitea -i gitea -c /etc/gitea/gitea.ini admin user create --username `whoami` --random-password --email `whoami`@`hostname`.local --admin
+----
++
+The output will include the generated password:
++
+TIP: Save this password somewhere safe, it will only be printed this one time. If this password is forgotten, it can be changed via the `gitea` command.
++
+[source,bash]
+----
+generated random password is 'gFoExCuDNPua'
+New user 'root' has been successfully created!
+----
+. Create an access token.
++
+TIP: Save this token somewhere safe, it will only be printed this one time.
++
+[source,bash]
+----
+token="$(sudo -u gitea -i gitea -c /etc/gitea/gitea.ini admin user generate-access-token --scopes all --username `whoami` --raw)"
+----
++
+. Create the SSH public key repository.
++
+[source,bash]
+----
+curl \
+   -sf \
+   -X POST "http://bootserver/git/api/v1/user/repos" \
+   -H "accept: application/json" \
+   -H "Authorization: token $token" \
+   -H "Content-Type: application/json" \
+   -d '{"name": "ssh-public-keys", "private": true}"' \
+   -o /dev/null \
+   -w "%{http_code}"
+----
++
+The output show print the following HTTP code:
++
+[source,text]
+----
+201
+----
+. Add an SSH key for cloning private repos.
++
+[source,bash]
+----
+for key in /`whoami`/.ssh/*.pub; do
+    curl \
+        -sf \
+        -X POST \
+        "http://bootserver/git/api/v1/admin/users/`whoami`/keys" \
+        -H "accept: application/json" \
+        -H "Authorization: token $token" \
+        -H "Content-Type: application/json" \
+        -d '{"key": "'"$(cat "$key")"'", "read_only": true, "title": "default"}' \
+        -o /dev/null \
+        -w "%{http_code}"
+done
+----
+. Setup the local Git user.
++
+[source,bash]
+----
+email="$(curl -sf -X GET "http://bootserver/git/api/v1/users/`whoami`" -H "accept: application/json" -H "Authorization: token $token" | jq -r .email)"
+git config --global user.email "$email"
+----
+. Clone the SSH public key repository.
++
+[source,bash]
+----
+ssh_url="$(curl -f -s -f -X GET "http://bootserver/git/api/v1/repos/`whoami`/ssh-public-keys" -H "accept: application/json" -H "Authorization: token $token" | jq -r .ssh_url)"
+ssh-keyscan -p 2222 bootserver >> /root/.ssh/known_hosts
+git clone "$ssh_url"
+cd ssh-public-keys
+----
+. Create the SSH public-key payload.
++
+[source,bash]
+----
+touch ssh-public-keys.json
+for key in /`whoami`/.ssh/*.pub; do
+    yq -i eval -o json '.ssh_authorized_keys += ["'"$(cat "$key")"'"]' ssh-public-keys.json
+done
+----
+. Commit and push the JSON file.
++
+[source,bash]
+----
+git add ssh-public-keys.json
+git commit -m "Initial keys."
+git push
+----
+
+
+The SSH Key repository is now ready for deploying hypervisors.
+
+The gui may be accessed via the `eth3` IP address at the `/git` sub-path: http://my-systems-dns-name/git

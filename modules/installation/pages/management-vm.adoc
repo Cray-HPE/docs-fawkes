@@ -12,7 +12,19 @@ NOTE: See `--help` for optional parameters.
 ----
 crucible vm start --ip-address "10.100.254.5/24" --dns "16.110.135.51,16.110.135.52" --system-name "redbull"
 ----
-. View the VM's console
+.. The command will announce when SSH is ready.
++
+[source,bash]
+----
+Waiting for SSH to become available.............................................
+Management VM is online.
+Login to the management-vm externally with:
+
+ssh 10.100.254.5
+
+Done.
+----
+.. For insight into the VM's launch, view its console in another terminal.
 +
 NOTE: Leave the console by pressing the escape character `^]` (kbd:[CTRL] + kbd:[]]).
 +
@@ -34,3 +46,14 @@ ssh root@10.100.254.5
 source /opt/cray/ansible/bin/activate
 ansible-playbook /srv/cray/metal-provision/bootserver.yml
 ----
+. Upload artifacts to nexus.
++
+[source,bash]
+----
+export NEXUS_URL=http://management-vm/nexus
+/srv/cray/metal-provision/scripts/nexus/setup-nexus.sh -r /vms/assets/images -u vm-images
+----
++
+[example]
+The Nexus GUI may be accessed at http://my-servers-dns-name/nexus. The default username and password are `admin:admin123`.
+. Proceed to the xref:Gitea.adoc[] setup guide.

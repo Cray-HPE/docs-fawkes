@@ -11,11 +11,11 @@ Recommended Distros:
 - SLES 15.5
 - OpenSUSE Leap 15.5
 
-Other distros will most likely work, but the commands may differ.
+Other distros will work, but mileage may vary. This guide only supports those listed above.
 
 == Virtual Machine Host
 
-You can use a VM as the host, but the virtualization software must support nested virtualization.
+One can use a virtual machine as the hypervisor host, but the virtualization software running the VM must support nested virtualization.
 
 An example of the option is shown below in VMWare Fusion:
 

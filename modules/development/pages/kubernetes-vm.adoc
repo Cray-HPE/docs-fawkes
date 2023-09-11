@@ -4,6 +4,8 @@
 
 WARNING: This page is a work in progress.
 
+This page assumes that a management VM was built locally.
+
 . Copy the kubernetes VM image from `node-images` into the management VM.
 +
 [source,bash]
@@ -12,7 +14,7 @@ scp node-images/output-kubernetes-vm-qemu/kubernetes-vm-x86_64.qcow2 root@192.16
 ----
 . Log in to the Management VM
 From the hypervisor you can log in using the isolated network. The address of the first management-vm will be 192.168.0.2. The management-vm will resolve from `/etc/hosts`, its IP may also be found by running `virsh net-dhcp-leases isolated`.
-
++
 [source,bash]
 ----
 ssh root@192.168.0.2
@@ -24,29 +26,11 @@ ssh root@192.168.0.2
 mkdir -p /vms/images
 mv ~/kubernetes-vm-x86_64.qcow2 /vms/images/
 ----
-. Generate an SSH key
-+
-[source,bash]
-----
-ssh-keygen
-----
-. Copy SSH key to the host system
-+
-[source,bash]
-----
-ssh-copy-id 192.168.0.2
-----
 . Change to the working directory for deploying the first Kubernetes Master VM
 +
 [source,bash]
 ----
-cd /srv/cray/terraform/kubernetes-master/
-----
-. Set the var for the QEMU system URI
-+
-[source,bash]
-----
-qemu+ssh://192.168.0.2/system
+cd /srv/cray/terraform
 ----
 . Review the plan for terraform
 +
