@@ -50,8 +50,7 @@ ansible-playbook /srv/cray/metal-provision/bootserver.yml
 +
 [source,bash]
 ----
-export NEXUS_URL=http://management-vm/nexus
-/srv/cray/metal-provision/scripts/nexus/setup-nexus.sh -r /vms/assets/images -u vm-images
+/srv/cray/metal-provision/scripts/nexus/setup-nexus.sh -r /vms/assets/images -u os-images
 ----
 +
 [example]
