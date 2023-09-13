@@ -56,4 +56,4 @@ export NEXUS_URL=http://management-vm/nexus
 +
 [example]
 The Nexus GUI may be accessed at http://my-servers-dns-name/nexus. The default username and password are `admin:admin123`.
-. Proceed to the xref:Gitea.adoc[] setup guide.
+. Proceed to the xref:gitea.adoc[] setup guide.

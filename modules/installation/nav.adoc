@@ -5,5 +5,5 @@
 ** xref:iso-installation.adoc[]
 ** xref:configuration.adoc[]
 ** xref:management-vm.adoc[]
-** xref:Gitea.adoc[]
+** xref:gitea.adoc[]
 ** xref:kubernetes-vm.adoc[]
