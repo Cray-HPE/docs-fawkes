@@ -25,52 +25,49 @@ NOTE: Windows users can download link:https://curl.se/windows/[`curl` for Window
 
 Fawkes is only available from a private mirror at this time.
 
-. Download the latest, stable Hypervisor ISO
-+
-NOTE: At this time the ISO is only available for users that have credentials to the Artifactory instance.
-+
-.. Set Credentials
-+
-[source,bash]
-----
-ARTIFACTORY_USER
-----
+Using the private mirror requires credentials to https://artifactory.algol60.net. For information on obtaining these, see link:https://app.tango.us/app/workflow/Downloading-from-Private-Repos-in-Artifactory-eb4f579cdf9a4ea8988e402a18008b7b[this guide].
+
+. Set Credentials
+* Username and token (see link:https://app.tango.us/app/workflow/Downloading-from-Private-Repos-in-Artifactory-eb4f579cdf9a4ea8988e402a18008b7b[this guide] for assistance).
 +
 [source,bash]
 ----
-ARTIFACTORY_TOKEN
+ARTIFACTORY_USER=
 ----
 +
 [source,bash]
 ----
-ARCH=x86_64
-STREAM=stable
+read -s ARTIFACTORY_TOKEN
 ----
-. Download the latest, stable Fawkes ISO
+. Set a desired release.
+* A specific release.
++
+[source,bash]
+----
+RELEASE=0.0.1-alpha.3
+----
+* The latest release from stable or unstable
++
+NOTE: At this time, Fawkes is still in a pre-release state and the stable stream is empty.
++
+[source,bash]
+----
+STREAM=unstable
+RELEASE="$(curl -u "${ARTIFACTORY_USER}":"${ARTIFACTORY_TOKEN}" "https://artifactory.algol60.net/artifactoy/api/search/latestVersion?g=${STREAM}&a=fawkes")"
+----
+. Download the tarball
 +
 NOTE: To use a proxy, add `--proxy http://example.com:443` to each `curl` call.
 +
 [source,bash]
 ----
-curl -C - -o fawkes-live-${ARCH}.iso "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/${STREAM}/fawkes-live/\\[RELEASE\\]/fawkes-live-\\[RELEASE\\]-${ARCH}.iso"
-----
-. Download the latest, stable Hypervisor ISO
-+
-[source,bash]
-----
-curl -C - -o hypervisor-${ARCH}.iso "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/${STREAM}/hypervisor/\\[RELEASE\\]/hypervisor-\\[RELEASE\\]-${ARCH}.iso"
-----
-. Download the latest, stable Management VM
-+
-[source,bash]
-----
-curl -C - -o management-vm-${ARCH}.qcow2 "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/${STREAM}/management-vm/\\[RELEASE\\]/management-vm-\\[RELEASE\\]-${ARCH}.qcow2"
-----
-. Download the latest, stable Kubernetes VM
-+
-[source,bash]
-----
-curl -C - -o kubernetes-vm-${ARCH}.qcow2 "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/${STREAM}/kubernetes-vm/\\[RELEASE\\]/kubernetes-vm-\\[RELEASE\\]-${ARCH}.qcow2"
+if [[ "$RELEASE" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+    STREAM=stable
+else
+    STREAM=unstable
+fi
+curl -C - -o "fawkes-${RELEASE}.tar.gz" \
+"https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/fawkes-releases/${STREAM}/fawkes/${RELEASE}/fawkes-${RELEASE}.tar.gz"
 ----
 
 == Creating the USB
@@ -90,34 +87,77 @@ Prerequisites for creating the USB from a Linux box.
 * `mktemp`
 * `parted`
 * `sgdisk`
+* `sha256sum`
 
 ==== Steps
 
-. Download the `write-livecd.sh` script
+The following steps will create a USB from a Linux OS.
+
+. Extract the fawkes LiveCD and the Crucible package from the tar ball
 +
 [source,bash]
 ----
-curl -s https://raw.githubusercontent.com/Cray-HPE/crucible/main/crucible/scripts/write-livecd.sh -O
-set +x write-livecd.sh
+tar --wildcards -xzvf ./fawkes-${RELEASE}.tar.gz "*/images/fawkes-live/fawkes-live*.iso*" "*/rpm/*/crucible*.rpm"
+----
+. Validate the liveCD
++
+[source,bash]
+----
+cd "fawkes-${RELEASE}/images/fawkes-live/"
+sha256sum -c ./fawkes-live*sha256.txt
+cd -
+----
+This should return with:
++
+....
+fawkes-live-<image ID>-x86_64.iso: OK
+....
+. Install Crucible
++
+NOTE: `crucible` is undergoing source code changes and will have packages for `yum` and `debian` package managers in the near future.
++
+* SUSE
++
+[source,bash]
+----
+zypper --plus-repo "fawkes-${RELEASE}/rpm/sle-$(awk -F= '/VERSION=/{gsub(/["-]/, "") ; print tolower($NF)}' /etc/os-release)" in -n crucible
 ----
 . Find the USB to use.
 +
 NOTE: The target device does not need to be wiped.
++
+* The following command will help deduce which device mapper name to use.
++
+[source,bash]
+----
+lsblk -b -l -d -o SIZE,NAME,TYPE,SUBSYSTEMS | grep usb
+----
+* Set the USB device to a variable.
+** Device mapper path.
++
+[source,bash]
+----
+USB=/dev/sdd
+----
+** FileSystem Label.
++
+[source,bash]
+----
+USB=/dev/disk/by-label/MYUSB
+----
 . Invoke the script, optionally passing a different size (in megabytes) for the copy-on-write persistent partition.
 +
 [source,bash]
 ----
-# usage: [DEVICE] [ISO] [SIZE OF COW]
-sudo ./write-livecd.sh /dev/sdX ./fawkes-live-${ARCH}.iso 50000
+crucible storage bootable "${USB}" "fawkes-${RELEASE}/images/fawkes-live/fawkes-live-*.iso"
 ----
 . Mount the USB and copy over our downloaded artifacts.
 +
 [source,bash]
 ----
 sudo mkdir -p /mnt
-sudo mount -L data /mnt
-sudo mkdir -p /mnt/images
-sudo cp -p *.iso *.qcow2 /mnt/images/
+sudo mount "${USB}4" /mnt
+sudo cp -p "fawkes-${RELEASE}.tar.gz" /mnt/
 sudo umount /mnt
 ----
 . Eject the USB and plug it into the server for deployment.
