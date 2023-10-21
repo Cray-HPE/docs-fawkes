@@ -100,7 +100,7 @@ The steps below will walk through creating a sufficient key.
 +
 NOTE: Fawkes recommends generating an EdDSA (`ed25519`) key-pair, but other ciphers such as RSA are acceptable. The guide below uses `ed25519`.
 +
-CAUTION: *DO NOT PASTE A PRIVATE KEY INTO ANY OF THE FOLLOWING WINDOWS*. The contents should come from
+CAUTION: #*DO NOT PASTE PRIVATE KEYS INTO ANY OF THE FOLLOWING TERMINAL SESSIONS*#. The contents should come from
 a file with a `.pub` suffix, this is the *public key*. Pasting the private key can compromise that key and prevent login after the disk installation completes.
 +
 Generate a key on a trusted workstation, and copy/paste a public key into a new file:
