@@ -2,6 +2,8 @@
 :toc:
 :toclevels: 3
 
+This guide will assist the user in deploying virtual machines on the Fawkes cluster.
+
 WARNING: This page is a work in progress.
 
 . Login to the Management VM if not already.

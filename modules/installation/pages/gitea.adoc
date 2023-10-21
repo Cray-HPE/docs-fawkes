@@ -2,15 +2,22 @@
 :toc:
 :toclevels: 3
 
-Now that the management VM has been set up, an SSH public key repository must be configured before deploying additional hypervisor servers.
+This will guide the user through setting up a cluster-wide repository with public keys for facilitating bare-metal deployments.
+
+== Steps
+
+This guide consists of the following steps:
 
 - Create a gitea user
 - Create a repo called ssh-public-keys
 - Add credentials to local repo
 - Push repo to Gitea
 
-Steps:
+=== Setup Gitea
 
+This segment will setup the gitea service for use.
+
+// TODO: Do we need this still?
 . Migrate the Gitea database.
 +
 [soruce,bash]
@@ -63,7 +70,14 @@ The output show print the following HTTP code:
 ----
 201
 ----
-. Add an SSH key for cloning private repos.
+
+=== Adding deployment keys
+
+This segment will add all generated deployment keys from the management-vm to the repository.
+
+NOTE: Access to all bare-metal deployed nodes is intentionally only setup for the management VM. Broadening this access for other servers is strictly left to the discretion of the user.
+
+. Add the management VM's SSH key(s) to the credential repository.
 +
 [source,bash]
 ----

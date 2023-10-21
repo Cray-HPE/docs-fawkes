@@ -2,7 +2,13 @@
 :toc:
 :toclevels: 3
 
+This guide will walk the user through launching and configuring the Fawkes management VM.
+
 WARNING: At this time, a new SSH key should be generated on the hypervisor to enable logging in. Run the xref:iso-installation.adoc#ssh-keys[SSH Key(s)] segment from within the hypervisor *before proceeding*.
+
+== Launching Fawkes
+
+This segment walks the uer through launching the Fawkes management VM.
 
 . Start the management VM, provide the external IP address and DNS for remotely logging into the VM.
 +
@@ -39,6 +45,11 @@ management-vm from the trusted workstation.
 ----
 ssh root@10.100.254.5
 ----
+
+== Configuring Fawkes
+
+This segment walks the user through configuring the Fawkes environment for discovery and cluster deployment.
+
 . Run the `bootserver` Ansible role.
 +
 [source,bash]

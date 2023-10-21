@@ -1,19 +1,29 @@
 = USB Creation
 :toc:
-:toclevels:
+:toclevels: 2
+
+This guide walks the user through setting up a bootable USB for bootstrapping the Fawkes cluster.
+
+NOTE: Users can also remotely mount the ISO using a BMC, but at this time a guide for doing so does not exist.
 
 == Downloading
+
+The Fawkes tarball needs to be downloaded.
 
 NOTE: For the time being, the artifacts are downloaded individually and from a private mirror.
 In the near future these will be available in a single artifact from a public mirror.
 
 === Prerequisites
 
+The following prerequisites are necessary for completing this guide.
+
 * `curl`
 
 NOTE: Windows users can download link:https://curl.se/windows/[`curl` for Windows].
 
-=== Downloading
+=== Downloading the Fawkes tarball
+
+Fawkes is only available from a private mirror at this time.
 
 . Download the latest, stable Hypervisor ISO
 +
@@ -63,11 +73,17 @@ curl -C - -o management-vm-${ARCH}.qcow2 "https://$ARTIFACTORY_USER:$ARTIFACTORY
 curl -C - -o kubernetes-vm-${ARCH}.qcow2 "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/csm-images/${STREAM}/kubernetes-vm/\\[RELEASE\\]/kubernetes-vm-\\[RELEASE\\]-${ARCH}.qcow2"
 ----
 
-== Linux
+== Creating the USB
+
+This segment will walk the user through creating the USB with the downloaded tarball.
+
+=== Linux
 
 The Linux method will enable persistence as well as data storage for bringing artifacts into the booted LiveCD.
 
-=== Prerequisites
+==== Prerequisites
+
+Prerequisites for creating the USB from a Linux box.
 
 * `blkid`
 * `dd`
@@ -75,7 +91,7 @@ The Linux method will enable persistence as well as data storage for bringing ar
 * `parted`
 * `sgdisk`
 
-=== Creating the USB
+==== Steps
 
 . Download the `write-livecd.sh` script
 +
@@ -106,13 +122,21 @@ sudo umount /mnt
 ----
 . Eject the USB and plug it into the server for deployment.
 
-== MacOS and Windows
+=== MacOS and Windows
+
+Creating a USB from MacOS and Windows is feasible using the help of a few third-party tools.
 
 CAUTION: The MacOS and Windows method will not enable persistence on the drive.
 
-=== Prerequisites
+==== Prerequisites
+
+This guide suggests the following third-party tools for USB creation.
 
 - link:https://etcher.balena.io/[belanaEtcher]
+
+==== Steps
+
+The following steps will create a bootable USB from a MacOS or Windows machine.
 
 NOTE: `dd` can also be used for macOS users.
 

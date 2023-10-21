@@ -2,6 +2,8 @@
 :toc:
 :toclevels: 3
 
+This section will walk the user through booting the LiveCD and bootstrapping the first hypervisor.
+
 [#uefi-boot]
 == UEFI Boot
 
@@ -85,9 +87,12 @@ crucible network interface lan0 A.B.C.D/E
 [#ssh-keys]
 === SSH Key(s)
 
-The <<ssh-keys>> segment segment must be performed on a trusted workstation with connectivity to the Fawkes cluster.
+Create SSH keys that will be used to login to the initial hypervisor and management VM. This segment must be performed on a trusted workstation or a peripheral server with connectivity to the Fawkes cluster.
 
-IMPORTANT: *Do not perform this segment on the LiveCD* or you will lock yourself out of the the hypervisor.
+[.lead]
+*DO NOT PERFORM THIS SEGMENT IN THE FAWKES LIVECD!* The SSH public key(s) generated here will be installed into the resulting hypervisor image, their matching private keys need to exist on another computer that can access the hypervisor once this LiveCD is shutdown.
+
+The steps below will walk through creating a sufficient key.
 
 . Generate or provide one or more SSH public keys.
 +
