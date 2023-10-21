@@ -118,7 +118,7 @@ ssh-keygen -t ed25519
 ----
 ssh-keygen -q -t ed25519 -N ''
 ----
-. Optionally import the key to make the subsequent steps passwordless, otherwise proceed to the next step.
+. Copy the *public key* to the LiveCD, authenticate with the password that was set in <<uefi-boot>> if the passwordless SSH step was not completed.
 +
 [source,bash]
 ----
