@@ -24,9 +24,9 @@ This segment will setup the gitea service for use.
 sudo -u gitea -i gitea -c /etc/gitea/gitea.ini admin user create --username `whoami` --random-password --email `whoami`@`hostname`.local --admin
 ----
 +
-The output will include the generated password:
+The output will include the generated password, *take note of the printed password*:
 +
-TIP: Save this password somewhere safe, it will only be printed this one time. If this password is forgotten, it can be changed via the `gitea` command.
+TIP: The password will only print this one time. If this password is forgotten, it can be changed via the `gitea` command.
 +
 [source,bash]
 ----
@@ -57,24 +57,18 @@ curl \
    -w "%{http_code}"
 ----
 +
-The output show print the following HTTP code:
+The output should print the following HTTP code:
 +
 [source,text]
 ----
 201
 ----
-
-=== Adding deployment keys
-
-This segment will add all generated deployment keys from the management-vm to the repository.
-
-NOTE: Access to all bare-metal deployed nodes is intentionally only setup for the management VM. Broadening this access for other servers is strictly left to the discretion of the user.
-
-. Add the management VM's SSH key(s) to the credential repository.
+. Add the management VM's SSH key(s) to the Git user's account.
 +
 [source,bash]
 ----
 for key in /`whoami`/.ssh/*.pub; do
+    echo -n "$key "
     curl \
         -sf \
         -X POST \
@@ -87,13 +81,22 @@ for key in /`whoami`/.ssh/*.pub; do
         -w "%{http_code}"
 done
 ----
-. Setup the local Git user.
++
+The output should print `201` for each key added. If the command is ran a second time to add more keys, existing keys will print `422`.
+. Configure the root Git user.
 +
 [source,bash]
 ----
 email="$(curl -sf -X GET "http://bootserver/git/api/v1/users/`whoami`" -H "accept: application/json" -H "Authorization: token $token" | jq -r .email)"
 git config --global user.email "$email"
 ----
+
+=== Adding deployment keys
+
+This segment will add all generated deployment keys from the management-vm to the repository.
+
+NOTE: Access to all bare-metal deployed nodes is intentionally only setup for the management VM. Broadening this access for other servers is strictly left to the discretion of the user.
+
 . Clone the SSH public key repository.
 +
 [source,bash]
@@ -121,7 +124,6 @@ git commit -m "Initial keys."
 git push
 ----
 
+The SSH Key repository is now ready for deploying hypervisors and other bare-metal images.
 
-The SSH Key repository is now ready for deploying hypervisors.
-
-The gui may be accessed via the `eth3` IP address at the `/git` sub-path: http://my-systems-dns-name/git
+The graphical user interface may be accessed via the `eth3` IP address at the `/git` sub-path: http://my-systems-dns-name/git (e.g. the same IP and/or hostname used to access the management-VM through SSH).
