@@ -11,17 +11,49 @@ WARNING: This page is a work in progress.
 +
 [source,code]
 ----
-cd /srv/cray/terraform/
+cd /srv/cray/terraform/prod
 ----
+// TODO: AUTOMATE STARTS HERE
+. Generate VM SSH key
++
+NOTE: Fawkes recommends generating an EdDSA (`ed25519`) key-pair, but other ciphers such as RSA are acceptable. The guide below uses `ed25519`.
++
+- With a passphrase:
++
+[source,bash]
+----
+ssh-keygen -t ed25519 -f ~/.ssh/id_ed25519_vm
+----
++
+- Without a passphrase:
++
+[source,bash]
+----
+ssh-keygen -q -t ed25519 -f ~/.ssh/id_ed25519_vm -N ''
+----
+. Update the inventory
++
+[source,bash]
+----
+yq eval -i '.node_defaults.ssh_keys += ["'"$(cat ~/.ssh/id_ed25519_vm.pub)"'"]' /srv/cray/terraform/prod/inventory.yaml
+----
+. Update the `base_volume.name`
++
+[source,bash]
+----
+IMAGE_ID=6.1.30
+yq eval -i '.node_defaults.base_volume.name = .node_defaults.base_volume.name + "-'"${IMAGE_ID}"'"' /srv/cray/terraform/prod/inventory.yaml
+----
+// TODO: AUTOMATE ENDS HERE
 . Review the plan for terraform
 +
 [source,bash]
 ----
-terraform plan -var-file="prod.tfvars"
+terragrunt plan
 ----
 . Execute terraform
 +
 [source,bash]
 ----
-terraform apply -var-file="prod.tfvars"
+terragrunt apply
 ----
