@@ -17,13 +17,6 @@ This guide consists of the following steps:
 
 This segment will setup the gitea service for use.
 
-// TODO: Do we need this still?
-. Migrate the Gitea database.
-+
-[soruce,bash]
-----
-sudo -u gitea -i gitea -c /etc/gitea/gitea.ini migrate
-----
 . Create a Gitea user.
 +
 [source,bash]
