@@ -50,19 +50,17 @@ ssh root@10.100.254.5
 
 This segment walks the user through configuring the Fawkes environment for discovery and cluster deployment.
 
-. Run the `bootserver` Ansible role.
-+
-[source,bash]
-----
-source /opt/cray/ansible/bin/activate
-ansible-playbook /srv/cray/metal-provision/bootserver.yml
-----
 . Upload artifacts to nexus.
 +
 [source,bash]
 ----
-export NEXUS_URL=http://management-vm/nexus
-/srv/cray/metal-provision/scripts/nexus/setup-nexus.sh -u /vms/assets/images -r os-images
+RELEASE=
+----
++
+[source,bash]
+----
+cd /vms/assets/fawkes-${RELEASE}
+NEXUS_URL=http://localhost:8081/nexus ./upload.sh
 ----
 +
 [example]
