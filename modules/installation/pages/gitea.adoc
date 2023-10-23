@@ -59,7 +59,7 @@ curl \
    -H "accept: application/json" \
    -H "Authorization: token $token" \
    -H "Content-Type: application/json" \
-   -d '{"name": "ssh-public-keys", "private": true}"' \
+   -d '{"name": "ssh-public-keys", "private": false}"' \
    -o /dev/null \
    -w "%{http_code}"
 ----
