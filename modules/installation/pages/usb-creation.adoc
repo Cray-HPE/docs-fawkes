@@ -93,25 +93,26 @@ Prerequisites for creating the USB from a Linux box.
 
 The following steps will create a USB from a Linux OS.
 
-. Extract the fawkes LiveCD and the Crucible package from the tar ball
+. Extract all images and RPMs from the tarball.
 +
 [source,bash]
 ----
-tar --wildcards -xzvf ./fawkes-${RELEASE}.tar.gz "*/images/fawkes-live/fawkes-live*.iso*" "*/rpm/*/crucible*.rpm"
+tar --wildcards -xzvf ./fawkes-${RELEASE}.tar.gz \
+    "*/images/" \
+    "*/rpm/"
 ----
-. Validate the liveCD
+. Validate the image's SHA sums
 +
 [source,bash]
 ----
-cd "fawkes-${RELEASE}/images/fawkes-live/"
-sha256sum -c ./fawkes-live*sha256.txt
-cd -
+for image_dir in fawkes-${RELEASE}/images/*; do
+    (
+    cd "$image_dir"
+    sha256sum -c ./"$(basename "$image_dir")"*sha256.txt
+    )
+done
 ----
-This should return with:
-+
-....
-fawkes-live-<image ID>-x86_64.iso: OK
-....
+All the images should return with `OK`, if any fail, please stop and open a bug (use the bug opening tab on the bottom right of this screen).
 . Install Crucible
 +
 NOTE: `crucible` is undergoing source code changes and will have packages for `yum` and `debian` package managers in the near future.
