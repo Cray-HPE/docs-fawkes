@@ -4,9 +4,9 @@ For the Fawkes installation, one will need:
 
 - An SSH public key, this will be used to access the management VM
 - A workstation with access to the first server to use as the hypervisor
-- A Fawkes tar ball
+- A Fawkes tarball
 +
-NOTE: At this time, there is no Fawkes tar ball. Artifacts are downloaded in the xref:2-pre-installation/1-usb-creation.adoc[]] stage.
+NOTE: At this time, there is no Fawkes tarball. Artifacts are downloaded in the xref:2-pre-installation/1-usb-creation.adoc[]] stage.
 
 == Air Gap
 
