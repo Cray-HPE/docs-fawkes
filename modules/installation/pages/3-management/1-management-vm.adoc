@@ -4,8 +4,6 @@
 
 This guide will walk the user through launching and configuring the Fawkes management VM.
 
-WARNING: At this time, a new SSH key should be generated on the hypervisor to enable logging in. Run the xref:2-pre-installation/2-iso-installation.adoc#ssh-keys[SSH Key(s)] segment from within the hypervisor *before proceeding*.
-
 == Launching Fawkes
 
 This segment walks the uer through launching the Fawkes management VM.
