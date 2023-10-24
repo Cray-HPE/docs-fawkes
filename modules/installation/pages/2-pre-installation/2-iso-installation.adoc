@@ -83,7 +83,7 @@ NOTE: Optionally set a DNS server by appending `--dns <server IP>`, additional s
 ----
 crucible network interface lan0 A.B.C.D/E % <1>
 ----
-<1> A static IP address.
+<1> A static IP address in CIDR notation.
 . Exit the console, or leave it open and move to a new terminal session on a trusted workstation. Proceed to the <<ssh-keys>> section.
 
 [#ssh-keys]
