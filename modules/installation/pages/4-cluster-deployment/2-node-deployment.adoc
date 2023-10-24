@@ -2,4 +2,91 @@
 :toc:
 :toclevels: 3
 
-// TODO: This page is a placeholder.
+This section of the guide will walk the user through deploying bare-metal nodes.
+
+== Inventory
+
+. Create an inventory file
++
+[source,bash]
+----
+cat << EOF > /etc/ansible/inventory
+[hypervisor]
+hypervisor.local
+$(conman -q | grep ncn-h | sed -s 's/-mgmt//')
+
+[storage]
+$(conman -q | grep ncn-s | sed -s 's/-mgmt//')
+EOF
+----
+
+== Hypervisor Deployment
+
+Deploying hypervisor nodes.
+
+=== Deployment
+
+Booting hypervisor nodes.
+
+. Set credentials for RedFish
++
+[source,bash]
+----
+cp /vms/assets/fawkes-*/gru.yml /etc/gru.yml
+vi /etc/gru.yml
+----
+
+* Replace the `username:` and `password:` values with ones that correspond to the RedFish endpoints on the cluster.
+* Set `insecure: true` if SSL is not configured with a trusted certificate on the RedFish endpoints.
+. Boot the hypervisor nodes
++
+[source,bash]
+----
+conman -q | grep ncn-h | gru -c /etc/gru.yml chassis boot http --now
+----
+. Each node should boot over HTTP and pull media.
+. Manually wipe and install each node over the console.
+* Connect to the node(s)
++
+[source,bash]
+----
+ssh ncn-h002
+----
+// TODO: Fix the passwords, only the first hypervisor should prompt the user. The rest should not prompt if the user logs in with SSH.
+* It'll ask you to set a password, the default password is blank.
+* Wipe the node.
++
+[source,bash]
+----
+crucible storage wipe -y
+----
+* Install the node.
++
+[source,bash]
+----
+crucible install
+----
+* Reboot
++
+[source,bash]
+----
+reboot
+----
+. Move onto the next hypervisor.
+
+== Provision
+
+Provision the hypervisor nodes.
+
+. Configure networking.
++
+[source,bash]
+----
+/opt/cray/ansible/bin/activate/ansible-playbook \
+    -i /etc/ansible/inventory \
+    /srv/cray/metal-provision/hypervisor.yml
+----
+
+== Storage
+
+// TODO: Placeholder.
