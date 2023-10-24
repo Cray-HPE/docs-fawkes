@@ -38,7 +38,7 @@ CRAY-HPE Hypervisor OS
 
 == Networking Bootstrap
 
-This segment sets up necessary interfaces for the fawkes management VM.
+This segment sets up necessary interfaces for the Fawkes management VM.
 
 . Configure the trunk interfaces.
 +
