@@ -14,7 +14,20 @@ NOTE: See `--help` for optional parameters.
 +
 [source,bash]
 ----
-crucible vm start --ip-address "10.100.254.5/24" --dns "16.110.135.51,16.110.135.52" --system-name "redbull"
+IP_ADDR="A.B.C.D/E" <1>
+DNS="A.B.C.D,E.F.G.H" <2>
+SYSTEM_NAME="eniac" <3>
+----
+<1> An IP in CIDR notation.
+<2> A comma delimited list of one or more DNS IP addresses.
+<3> The cluster's name.
++
+[source,bash]
+----
+crucible vm start \
+    --ip-address "$IP_ADDR" \
+    --dns "$DNS" \
+    --system-name "$SYSTEM_NAME"
 ----
 .. The command will announce when SSH is ready.
 +
@@ -24,13 +37,14 @@ Waiting for SSH to become available.............................................
 Management VM is online.
 Login to the management-vm externally with:
 
-ssh 10.100.254.5
+ssh A.B.C.D <1>
 
 Done.
 ----
+<1> The assigned IP Address
 .. For insight into the VM's launch, view its console in another terminal.
 +
-NOTE: Leave the console by pressing the escape character `^]` (kbd:[CTRL] + kbd:[]]).
+TIP: Leave the console by pressing the escape character `^]` (kbd:[CTRL] + kbd:[]]).
 +
 [source,bash]
 ----
@@ -41,8 +55,9 @@ management-vm from the trusted workstation.
 +
 [source,bash]
 ----
-ssh root@10.100.254.5
+ssh root@A.B.C.D <1>
 ----
+<1> The assigned IP address
 
 == Configuring Fawkes
 
