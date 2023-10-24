@@ -6,7 +6,7 @@ For the Fawkes installation, one will need:
 - A workstation with access to the first server to use as the hypervisor
 - A Fawkes tar ball
 +
-NOTE: At this time, there is no Fawkes tar ball. Artifacts are downloaded in the xref:usb-creation.adoc[] stage.
+NOTE: At this time, there is no Fawkes tar ball. Artifacts are downloaded in the xref:2-pre-installation/1-usb-creation.adoc[]] stage.
 
 == Air Gap
 

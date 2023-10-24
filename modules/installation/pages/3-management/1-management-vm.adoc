@@ -4,7 +4,7 @@
 
 This guide will walk the user through launching and configuring the Fawkes management VM.
 
-WARNING: At this time, a new SSH key should be generated on the hypervisor to enable logging in. Run the xref:iso-installation.adoc#ssh-keys[SSH Key(s)] segment from within the hypervisor *before proceeding*.
+WARNING: At this time, a new SSH key should be generated on the hypervisor to enable logging in. Run the xref:2-pre-installation/2-iso-installation.adoc#ssh-keys[SSH Key(s)] segment from within the hypervisor *before proceeding*.
 
 == Launching Fawkes
 
@@ -72,4 +72,4 @@ NEXUS_URL=http://localhost:8081/nexus ./upload.sh
 [TIP]
 The Nexus GUI may be accessed at http://my-servers-dns-name/nexus. The default username and password are `admin:admin123`.
 
-. Proceed to the xref:gitea.adoc[] setup guide.
+. Proceed to the xref:3-management/2-gitea.adoc[] setup guide.

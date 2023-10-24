@@ -1,4 +1,4 @@
-= Installation
+= Fawkes Installation
 
 This module will guide a user through the installation of the Fawkes project on bare-metal.
 

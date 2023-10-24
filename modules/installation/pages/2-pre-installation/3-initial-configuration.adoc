@@ -8,7 +8,7 @@ This section will configure a brand new hypervisor image; first login, and netwo
 
 This segment goes through the first login on a freshly installed hypervisor image.
 
-. Open a serial console to the server if one is not already open from completing the xref:iso-installation.adoc[] guide.
+. Open a serial console to the server if one is not already open from completing the xref:2-pre-installation/2-iso-installation.adoc[] guide.
 . After booting, the login prompt should be presented
 +
 [source,bash]

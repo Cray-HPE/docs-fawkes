@@ -1,9 +1,15 @@
 * xref:overview.adoc[]
-** xref:installation-requirements.adoc[]
-** xref:hardware-and-network-requirements.adoc[]
-** xref:usb-creation.adoc[]
-** xref:iso-installation.adoc[]
-** xref:configuration.adoc[]
-** xref:management-vm.adoc[]
-** xref:gitea.adoc[]
-** xref:kubernetes-vm.adoc[]
+** Requirements
+*** xref:1-preface/2-installation-requirements.adoc[]
+*** xref:1-preface/1-hardware-and-network-requirements.adoc[]
+** Pre-Installation
+*** xref:2-pre-installation/1-usb-creation.adoc[]
+*** xref:2-pre-installation/2-iso-installation.adoc[]
+*** xref:2-pre-installation/3-initial-configuration.adoc[]
+** Management
+*** xref:3-management/1-management-vm.adoc[]
+*** xref:3-management/2-gitea.adoc[]
+** Cluster Deployment
+*** xref:4-cluster-deployment/1-node-discovery.adoc[]
+*** xref:4-cluster-deployment/2-node-deployment.adoc[]
+*** xref:4-cluster-deployment/3-kubernetes-vm.adoc[]
