@@ -1,8 +1,5 @@
 # http://editorconfig.org
-
-# this file is the top-most editorconfig file
 root = true
-
 
 [*]
 charset = utf-8
@@ -16,12 +13,6 @@ trim_trailing_whitespace = true
 [*.{json,yml,yaml}]
 indent_size = 2
 
-[*.sh]
-indent_size = 4
-
 [*.{adoc,md}]
 trim_trailing_whitespace = false
 indent_size = 2
-
-[*.tf]
-trim_trailing_whitespace = false
