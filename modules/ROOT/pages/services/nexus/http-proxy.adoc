@@ -1,0 +1,40 @@
+= HTTP/HTTPS Proxy
+:toc:
+:toclevels: 3
+
+This section will guide the user through setting up an HTTP/HTTPS proxy in Nexus.
+
+== Use Case
+
+Setting up an HTTP/HTTPS proxy is useful when setting up mirrors in Nexus behind a firewall or in an air gap environment.
+
+== Prerequisites
+
+* Nexus is up and running
+* The Nexus GUI is accessible (e.g. http://my-management-vm/nexus)
+* The Nexus administrator credentials (default: `admin:admin123`)
+* A proxy URL (IP or hostname) and port
+
+== Steps
+
+NOTE: This can only be done via a GUI, Nexus3 does not support modifying this option with their REST API.
+
+. Visit the Nexus GUI (e.g. http://my-management-vm/nexus)
++
+image::nexus/nexus-welcome.png[Landing page,align="left"]
+. Click "Sign in" and use the Nexus credentials to signin to an administrative user.
++
+image::nexus/nexus-signin.png[Signing in,align="left"]
+. Click the "cog" at the top of the page
++
+image::nexus/nexus-cog.png[Server configuration,align="left"]
+. Find "HTTP" on the left underneath "System"
++
+image::nexus/nexus-proxy.png[Proxy configuration,align="left"]
+. Place a check in either HTTP proxy, HTTPS proxy, or both. If the proxy IP/URL given by the network administrator is `http`, check _both_ HTTP and HTTPS proxy and fill them in the same way.
+. Fill in the URL and Port for the proxy for each proxy that was enabled.
++
+image::nexus/nexus-proxy-filled.png[Filled in proxy configuration,align="left"]
+. Click "Save" at the bottom
+
+Nexus is now configured to send HTTP/HTTPS traffic through the defined proxies.

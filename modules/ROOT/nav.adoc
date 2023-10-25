@@ -1,2 +1,5 @@
 * xref:index.adoc[]
-* xref:services.adoc[]
+* xref:services/index.adoc[]
+** xref:services/nexus/index.adoc[]
+*** xref:services/nexus/change-password.adoc[]
+*** xref:services/nexus/http-proxy.adoc[]
