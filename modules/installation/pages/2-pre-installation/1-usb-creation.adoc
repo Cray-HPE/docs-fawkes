@@ -70,9 +70,9 @@ curl -C - -o "fawkes-${RELEASE}.tar.gz" \
 "https://$ARTIFACTORY_USER:$ARTIFACTORY_TOKEN@artifactory.algol60.net/artifactory/fawkes-releases/${STREAM}/fawkes/${RELEASE}/fawkes-${RELEASE}.tar.gz"
 ----
 
-== Creating the USB
+== Creating the bootable USB drive
 
-This segment will walk the user through creating the USB with the downloaded tarball.
+This segment will walk the user through creating the USB drive with the downloaded tarball.
 
 === Linux
 
@@ -80,7 +80,7 @@ The Linux method will enable persistence as well as data storage for bringing ar
 
 ==== Prerequisites
 
-Prerequisites for creating the USB from a Linux box.
+Prerequisites for creating the USB drive from a Linux box.
 
 * `blkid`
 * `dd`
@@ -152,7 +152,7 @@ USB=/dev/disk/by-label/MYUSB
 ----
 crucible storage bootable "${USB}" "fawkes-${RELEASE}/images/fawkes-live/fawkes-live-*.iso"
 ----
-. Mount the USB and copy over our downloaded artifacts.
+. Mount the USB drive and copy over our downloaded artifacts.
 +
 [source,bash]
 ----
@@ -182,5 +182,5 @@ The following steps will create a bootable USB from a MacOS or Windows machine.
 NOTE: `dd` can also be used for macOS users.
 
 . Open belanaEtcher
-. Select the ISO file, the USB stick, and click Flash
+. Select the ISO file, the USB drive, and click Flash
 . Eject the USB drive and insert it into the server
