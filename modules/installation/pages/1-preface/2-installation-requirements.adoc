@@ -3,7 +3,7 @@
 For the Fawkes installation, one will need:
 
 - An SSH key pair, this will be used to access the management VM
-- A workstation with access to the first server to use as the hypervisor
+- A workstation with access to the first server to use as a hypervisor
 - A Fawkes tarball
 +
 NOTE: At this time, there is no Fawkes tarball. Artifacts are downloaded in the xref:2-pre-installation/1-usb-creation.adoc[] stage.
