@@ -112,7 +112,7 @@ for image_dir in fawkes-${RELEASE}/images/*; do
     )
 done
 ----
-All the images should return with `OK`, if any fail, please stop and open a bug (use the bug opening tab on the bottom right of this screen).
+All the images should return with `OK`. If any fail, please stop and open a bug by using the bug opening tab on the bottom right of this screen.
 . Install Crucible
 +
 NOTE: `crucible` is undergoing source code changes and will have packages for `yum` and `debian` package managers in the near future.
