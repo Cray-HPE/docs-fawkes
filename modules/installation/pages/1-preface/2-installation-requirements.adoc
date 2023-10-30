@@ -2,7 +2,7 @@
 
 For the Fawkes installation, one will need:
 
-- An SSH public key, this will be used to access the management VM
+- An SSH key pair, this will be used to access the management VM
 - A workstation with access to the first server to use as the hypervisor
 - A Fawkes tarball
 +
