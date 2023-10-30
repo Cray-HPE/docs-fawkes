@@ -123,7 +123,7 @@ NOTE: `crucible` is undergoing source code changes and will have packages for `y
 ----
 zypper --plus-repo "fawkes-${RELEASE}/rpm/sle-$(awk -F= '/VERSION=/{gsub(/["-]/, "") ; print tolower($NF)}' /etc/os-release)" in -n crucible
 ----
-. Find the USB to use.
+. Find the desired USB drive.
 +
 NOTE: The target device does not need to be wiped.
 +
