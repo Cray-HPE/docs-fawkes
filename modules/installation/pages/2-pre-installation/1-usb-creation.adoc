@@ -161,7 +161,7 @@ sudo mount "${USB}4" /mnt
 sudo cp -p "fawkes-${RELEASE}.tar.gz" /mnt/
 sudo umount /mnt
 ----
-. Eject the USB and plug it into the server for deployment.
+. Eject the USB drive and plug it into the server for deployment.
 
 === MacOS and Windows
 
