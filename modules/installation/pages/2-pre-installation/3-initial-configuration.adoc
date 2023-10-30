@@ -2,6 +2,13 @@
 :toc:
 :toclevels: 3
 
+This section will configure a brand new hypervisor image; first login, and network setup.
+
+== First Login
+
+This segment goes through the first login on a freshly installed hypervisor image.
+
+. Open a serial console to the server if one is not already open from completing the xref:2-pre-installation/2-iso-installation.adoc[] guide.
 . After booting, the login prompt should be presented
 +
 [source,bash]
@@ -29,30 +36,19 @@ Retype new password:
 CRAY-HPE Hypervisor OS
 ----
 
+== Networking Bootstrap
+
+This segment sets up necessary interfaces for the Fawkes management VM.
+
 . Configure the trunk interfaces.
 +
 [source,bash]
 ----
 crucible network interface --noip bond0 --members mgmt0,mgmt1
-crucible network interface --noip bond0.hmn0 --vlan-id 4 --members bond0
 ----
 . Configure the site-link.
 +
 [source,bash]
 ----
-crucible network interface lan0 10.100.254.5/24
-----
-+
-TIP: If `lan0` does not exist on your node, set up a CMN (customer management network) interface.
-+
-[source,bash]
-----
-crucible network interface --dhcp bond0.cmn0 --vlan-id 7 --members bond0
-----
-. Configure search domains and DNS.
-+
-[source,bash]
-----
-crucible network system --dns 16.110.135.51,16.110.135.52
-crucible network system --search mtl
+crucible network interface --noip lan0
 ----

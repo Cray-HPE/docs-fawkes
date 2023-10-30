@@ -2,6 +2,8 @@
 :toc:
 :toclevels: 3
 
+This section will walk the user through booting the LiveCD and bootstrapping the first hypervisor.
+
 [#uefi-boot]
 == UEFI Boot
 
@@ -54,6 +56,7 @@ These steps will be carried out on the LiveCD for preparing the Fawkes installat
 === Prerequisites
 
 - A network with an active DHCP server or a known static IP address
+- A trusted workstation or server that is peripheral to the fawkes cluster with access to the cluster
 
 === Network access
 
@@ -76,24 +79,28 @@ crucible network interface --dhcp lan0
 +
 NOTE: Optionally set a DNS server by appending `--dns <server IP>`, additional servers may be specified using a comma delimited list (e.g. `--dns <server IP N>,<server IP N+1>`) .
 +
-[source,bash]
+[source,bash,line-comment=%]
 ----
-crucible network interface lan0 A.B.C.D/E
+crucible network interface lan0 A.B.C.D/E % <1>
 ----
+<1> A static IP address in CIDR notation.
 . Exit the console, or leave it open and move to a new terminal session on a trusted workstation. Proceed to the <<ssh-keys>> section.
 
 [#ssh-keys]
 === SSH Key(s)
 
-The <<ssh-keys>> segment segment must be performed on a trusted workstation with connectivity to the Fawkes cluster.
+Create SSH keys that will be used to login to the initial hypervisor and management VM. This segment must be performed on a trusted workstation or a peripheral server with connectivity to the Fawkes cluster.
 
-IMPORTANT: *Do not perform this segment on the LiveCD* or you will lock yourself out of the the hypervisor.
+[.lead]
+*DO NOT PERFORM THIS SEGMENT IN THE FAWKES LIVECD!* The SSH public key(s) generated here will be installed into the resulting hypervisor image, their matching private keys need to exist on another computer that can access the hypervisor once this LiveCD is shutdown.
+
+The steps below will walk through creating a sufficient key.
 
 . Generate or provide one or more SSH public keys.
 +
 NOTE: Fawkes recommends generating an EdDSA (`ed25519`) key-pair, but other ciphers such as RSA are acceptable. The guide below uses `ed25519`.
 +
-CAUTION: *DO NOT PASTE A PRIVATE KEY INTO ANY OF THE FOLLOWING WINDOWS*. The contents should come from
+CAUTION: #*DO NOT PASTE PRIVATE KEYS INTO ANY OF THE FOLLOWING TERMINAL SESSIONS*#. The contents should come from
 a file with a `.pub` suffix, this is the *public key*. Pasting the private key can compromise that key and prevent login after the disk installation completes.
 +
 Generate a key on a trusted workstation, and copy/paste a public key into a new file:
@@ -111,18 +118,11 @@ ssh-keygen -t ed25519
 ----
 ssh-keygen -q -t ed25519 -N ''
 ----
-. Optionally import the key to make the subsequent steps passwordless, otherwise proceed to the next step.
+. Copy the *public key* to the LiveCD, authenticate with the password that was set in <<uefi-boot>> if the passwordless SSH step was not completed.
 +
-[source,bash]
-----
-ssh-copy-id -i </path/to/key> root@A.B.C.D
-----
-. Copy the *public* key to the LiveCD, authenticate with the password that was set in <<uefi-boot>> if the passwordless SSH step was not completed.
-+
-[source,bash]
-----
+....
 scp -p <path/to/key>.pub root@A.B.C.D:/root/.ssh/
-----
+....
 
 == Installation
 

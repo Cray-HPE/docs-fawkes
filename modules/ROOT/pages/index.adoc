@@ -1,5 +1,4 @@
-= Fawkes Project
-:navtitle: Fawkes
+= Introduction
 :toc:
 :toclevels: 3
 

@@ -10,4 +10,4 @@ This entails:
 
 == Requirements
 
-For hardware requirements, see xref:installation:hardware-and-network-requirements.adoc[] document. Pay attention to the requirements pertaining to "testing".
+For hardware requirements, see xref:installation:1-preface/1-hardware-and-network-requirements.adoc[] document. Pay attention to the requirements pertaining to "testing".

@@ -1,0 +1,88 @@
+= Management VM
+:toc:
+:toclevels: 3
+
+This guide will walk the user through launching and configuring the Fawkes management VM.
+
+== Launching Fawkes
+
+This segment walks the uer through launching the Fawkes management VM.
+
+. Start the management VM, provide the external IP address and DNS for remotely logging into the VM.
++
+NOTE: See `--help` for optional parameters.
++
+[source,bash]
+----
+IP_ADDR="A.B.C.D/E" <1>
+DNS="A.B.C.D,E.F.G.H" <2>
+SYSTEM_NAME="eniac" <3>
+----
+<1> An IP in CIDR notation.
+<2> A comma delimited list of one or more DNS IP addresses.
+<3> The cluster's name.
++
+[source,bash]
+----
+crucible vm start \
+    --ip-address "$IP_ADDR" \
+    --dns "$DNS" \
+    --system-name "$SYSTEM_NAME"
+----
+.. The command will announce when SSH is ready.
++
+[source,bash]
+----
+Waiting for SSH to become available.............................................
+Management VM is online.
+Login to the management-vm externally with:
+
+ssh A.B.C.D <1>
+
+Done.
+----
+<1> The assigned IP Address
+.. For insight into the VM's launch, view its console in another terminal.
++
+TIP: Leave the console by pressing the escape character `^]` (kbd:[CTRL] + kbd:[]]).
++
+[source,bash]
+----
+virsh console management-vm
+----
+. Once the node is up and cloud-init has printed a message indicating it has finished, open a new window and SSH to the
+management-vm from the trusted workstation.
++
+[source,bash]
+----
+ssh root@A.B.C.D <1>
+----
+<1> The assigned IP address
+
+== Configuring Fawkes
+
+This segment walks the user through configuring the Fawkes environment for discovery and cluster deployment.
+
+. Upload artifacts to nexus.
++
+[source,bash]
+----
+RELEASE=
+----
++
+[source,bash]
+----
+cd /vms/assets/fawkes-${RELEASE}
+NEXUS_URL=http://localhost:8081/nexus ./upload.sh
+----
+. Run the `bootserver` Ansible role.
++
+[source,bash]
+----
+/opt/cray/ansible/bin/activate/ansible-playbook /srv/cray/metal-provision/bootserver.yml
+----
++
+[TIP]
+The Nexus GUI may be accessed at http://my-servers-dns-name/nexus. The default username and password are `admin:admin123`.
+
+. Proceed to the xref:3-management/2-gitea.adoc[] setup guide.
