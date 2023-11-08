@@ -79,7 +79,7 @@ NEXUS_URL=http://localhost:8081/nexus ./upload.sh
 +
 [source,bash]
 ----
-/opt/cray/ansible/bin/activate/ansible-playbook /srv/cray/metal-provision/bootserver.yml
+/opt/cray/ansible/bin/ansible-playbook /srv/cray/metal-provision/bootserver.yml
 ----
 +
 [TIP]
