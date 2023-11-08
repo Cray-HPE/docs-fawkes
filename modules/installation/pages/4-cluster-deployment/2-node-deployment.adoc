@@ -82,7 +82,7 @@ Provision the hypervisor nodes.
 +
 [source,bash]
 ----
-/opt/cray/ansible/bin/activate/ansible-playbook \
+/opt/cray/ansible/bin/ansible-playbook \
     -i /etc/ansible/inventory \
     /srv/cray/metal-provision/hypervisor.yml
 ----
