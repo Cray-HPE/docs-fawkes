@@ -35,14 +35,14 @@ ssh-keygen -q -t ed25519 -f ~/.ssh/id_ed25519_vm -N ''
 +
 [source,bash]
 ----
-yq eval -i '.node_defaults.ssh_keys += ["'"$(cat ~/.ssh/id_ed25519_vm.pub)"'"]' /srv/cray/terraform/prod/inventory.yaml
+yq eval -i '.node_defaults.ssh_keys += ["'"$(cat ~/.ssh/id_ed25519_vm.pub)"'"]' /srv/cray/terraform/prod/inventory/inventory.yaml
 ----
 . Update the `base_volume.name`
 +
 [source,bash]
 ----
 IMAGE_ID=6.1.30
-yq eval -i '.node_defaults.base_volume.name = .node_defaults.base_volume.name + "-'"${IMAGE_ID}"'"' /srv/cray/terraform/prod/inventory.yaml
+yq eval -i '.node_defaults.base_volume.name = .node_defaults.base_volume.name + "-'"${IMAGE_ID}"'"' /srv/cray/terraform/prod/inventory/inventory.yaml
 ----
 // TODO: AUTOMATE ENDS HERE
 . Review the plan for terraform
