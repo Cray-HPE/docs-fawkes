@@ -53,7 +53,7 @@ NOTE: At this time, Fawkes is still in a pre-release state and the stable stream
 [source,bash]
 ----
 STREAM=unstable
-RELEASE="$(curl -u "${ARTIFACTORY_USER}":"${ARTIFACTORY_TOKEN}" "https://artifactory.algol60.net/artifactoy/api/search/latestVersion?g=${STREAM}&a=fawkes")"
+RELEASE="$(curl -u "${ARTIFACTORY_USER}":"${ARTIFACTORY_TOKEN}" "https://artifactory.algol60.net/artifactory/api/search/latestVersion?g=${STREAM}&a=fawkes")"
 ----
 . Download the tarball
 +
