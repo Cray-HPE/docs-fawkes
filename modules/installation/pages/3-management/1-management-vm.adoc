@@ -81,7 +81,14 @@ RELEASE=
 +
 [source,bash]
 ----
-cd /vms/assets/fawkes-${RELEASE}
+cd /vms/assets/
+tar -xzvf fawkes-*.tar.gz
+----
+. Upload artifacts to nexus.
++
+[source,bash]
+----
+cd "/vms/assets/$(basename fawkes-*)"
 NEXUS_URL=http://localhost:8081/nexus ./upload.sh
 ----
 . Run the `bootserver` Ansible role.
