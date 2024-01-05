@@ -63,7 +63,16 @@ ssh root@A.B.C.D <1>
 
 This segment walks the user through configuring the Fawkes environment for discovery and cluster deployment.
 
-. Upload artifacts to nexus.
+. Run the `webserver` Ansible role.
++
+[source,bash]
+----
+/opt/cray/ansible/bin/ansible-playbook /srv/cray/metal-provision/webserver.yml
+----
++
+[TIP]
+Following a successful run of the webserver role, the Nexus GUI may be accessed at http://my-servers-dns-name/nexus. The default username and password are `admin:admin123`. To change this password, see xref:docs:ROOT:services/nexus/change-password.adoc[].
+. Extract and change into the release tar ball.
 +
 [source,bash]
 ----
