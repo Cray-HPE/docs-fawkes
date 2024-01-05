@@ -133,7 +133,13 @@ NOTE: The target device does not need to be wiped.
 ----
 lsblk -b -l -d -o SIZE,NAME,TYPE,SUBSYSTEMS | grep usb
 ----
-* Set the USB device to a variable.
++
+Example output:
++
+....
+256641603584 sdd   disk block:scsi:usb:pci
+....
+. Set the USB device to a variable.
 ** Device mapper path.
 +
 [source,bash]
