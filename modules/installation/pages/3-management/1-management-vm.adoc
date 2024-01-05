@@ -97,8 +97,5 @@ NEXUS_URL=http://localhost:8081/nexus ./upload.sh
 ----
 /opt/cray/ansible/bin/ansible-playbook /srv/cray/metal-provision/bootserver.yml
 ----
-+
-[TIP]
-The Nexus GUI may be accessed at http://my-servers-dns-name/nexus. The default username and password are `admin:admin123`.
 
 . Proceed to the xref:3-management/2-gitea.adoc[] setup guide.
