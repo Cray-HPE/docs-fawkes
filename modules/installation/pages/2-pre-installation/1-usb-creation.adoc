@@ -27,7 +27,7 @@ Fawkes is only available from a private mirror at this time.
 
 Using the private mirror requires credentials to https://artifactory.algol60.net. For information on obtaining these, see link:https://app.tango.us/app/workflow/Downloading-from-Private-Repos-in-Artifactory-eb4f579cdf9a4ea8988e402a18008b7b[this guide].
 
-. Set Credentials
+. Set Credentials.
 * Username and token (see link:https://app.tango.us/app/workflow/Downloading-from-Private-Repos-in-Artifactory-eb4f579cdf9a4ea8988e402a18008b7b[this guide] for assistance).
 +
 [source,bash]
@@ -46,7 +46,7 @@ read -s ARTIFACTORY_TOKEN
 ----
 RELEASE=0.0.1-alpha.3
 ----
-* The latest release from stable or unstable
+* The latest release from stable or unstable.
 +
 NOTE: At this time, Fawkes is still in a pre-release state and the stable stream is empty.
 +
@@ -55,7 +55,7 @@ NOTE: At this time, Fawkes is still in a pre-release state and the stable stream
 STREAM=unstable
 RELEASE="$(curl -u "${ARTIFACTORY_USER}":"${ARTIFACTORY_TOKEN}" "https://artifactory.algol60.net/artifactory/api/search/latestVersion?g=${STREAM}&a=fawkes")"
 ----
-. Download the tarball
+. Download the tarball.
 +
 NOTE: To use a proxy, add `--proxy http://example.com:443` to each `curl` call.
 +
@@ -101,7 +101,7 @@ tar --wildcards -xzvf ./fawkes-${RELEASE}.tar.gz \
     "*/images/" \
     "*/rpm/"
 ----
-. Validate the image's SHA sums
+. Validate the image's SHA sums.
 +
 [source,bash]
 ----
