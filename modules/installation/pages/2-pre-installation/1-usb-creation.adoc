@@ -118,7 +118,7 @@ All the images should return with `OK`. If any fail, please stop and open a bug 
 +
 NOTE: `crucible` is undergoing source code changes and will have packages for `yum` and `debian` package managers in the near future.
 +
-* YUM RPM (SUSE/RedHat)
+* RPM method (SUSE/RedHat)
 +
 [source,bash]
 ----
