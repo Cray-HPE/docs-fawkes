@@ -185,7 +185,7 @@ CAUTION: The MacOS and Windows method will not enable persistence on the drive.
 
 This guide suggests the following third-party tools for USB creation.
 
-- link:https://etcher.balena.io/[belanaEtcher]
+- link:https://etcher.balena.io/[belanaEtcher] (`x86_64` only, no `arm64` support)
 
 ==== Steps
 
