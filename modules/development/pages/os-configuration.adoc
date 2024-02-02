@@ -39,7 +39,7 @@ git@github.com:Cray-HPE/metal-provision.git
 +
 [source,bash]
 ----
-. /srv/cray/metal-provision/scripts/packer/setup-functions.sh
+. ./metal-provision/scripts/packer/setup-functions.sh
 install_ansible
 ----
 . Run the hypervisor playbook, this assumes repositories are already set up.If not, see <<internal-repository-setup>>.
@@ -78,6 +78,6 @@ export ARTIFACTORY_TOKEN=
 . Run the setup repositories script:
 [source,bash]'
 ----
-. /srv/cray/metal-provision/scripts/packer/setup-functions.sh
+. ./metal-provision/scripts/packer/setup-functions.sh
 setup_repositories
 ----
