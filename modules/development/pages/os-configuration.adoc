@@ -76,7 +76,8 @@ export ARTIFACTORY_USER=
 export ARTIFACTORY_TOKEN=
 ----
 . Run the setup repositories script:
-[source,bash]'
++
+[source,bash]
 ----
 . ./metal-provision/scripts/packer/setup-functions.sh
 setup_repositories
