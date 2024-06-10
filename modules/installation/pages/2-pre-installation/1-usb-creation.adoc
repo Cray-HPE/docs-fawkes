@@ -158,6 +158,12 @@ USB=/dev/sdd
 ----
 USB=/dev/disk/by-label/MYUSB
 ----
+. Export the `RELEASE` variable from earlier (optional). This will ensure that the latest `crucible` is installed into the USB if it wasn't included in the fawkes-live image.
++
+[source,bash]
+----
+export RELEASE
+----
 . Invoke the script, optionally passing a different size (in megabytes) for the copy-on-write persistent partition.
 +
 [source,bash]
