@@ -4,22 +4,6 @@
 
 This section of the guide will walk the user through deploying bare-metal nodes.
 
-== Inventory
-
-. Create an inventory file
-+
-[source,bash]
-----
-cat << EOF > /etc/ansible/inventory
-[hypervisor]
-hypervisor.local
-$(conman -q | grep ncn-h | sed -s 's/-mgmt//')
-
-[storage]
-$(conman -q | grep ncn-s | sed -s 's/-mgmt//')
-EOF
-----
-
 == Hypervisor Deployment
 
 Deploying hypervisor nodes.
@@ -74,11 +58,45 @@ reboot
 ----
 . Move onto the next hypervisor.
 
+
+[NOTE]
+====
+After the hypervisor reboots, if no IP is set you may have to run the following.
+[source,bash]
+----
+crucible network interface --dhcp mgmt0
+----
+This is a bug in the NetworkManager configuration and setup during the hypervisor install.
+====
+
+== Inventory
+
+. Create an inventory file
++
+[source,bash]
+----
+cat << EOF > /etc/ansible/inventory
+[hypervisor]
+hypervisor.local
+$(conman -q | grep ncn | sed -s 's/-mgmt//')
+
+[storage]
+$(conman -q | grep ncn-s | sed -s 's/-mgmt//')
+EOF
+----
+
+. Trust all deployed machines.
++
+[source,bash]
+----
+for host in $(conman -q | grep -oP 'ncn-\w\d+'); do ssh-keyscan -H $host >> ~/.ssh/known_hosts 2>/dev/null; done
+----
+
 == Provision
 
 Provision the hypervisor nodes.
 
-. Configure networking.
+. Provision the hypervisors.
 +
 [source,bash]
 ----
@@ -86,6 +104,18 @@ Provision the hypervisor nodes.
     -i /etc/ansible/inventory \
     /srv/cray/metal-provision/hypervisor.yml
 ----
++
+[WARNING]
+====
+If the note from the <<Inventory>> section was followed, Ansible will hang while setting up VLANs. When it hangs, login
+to each node and run
+[source,bash]
+----
+systemctl restart NetworkManager
+nmcli device reapply mgmt0
+----
+
+====
 
 == Storage
 
